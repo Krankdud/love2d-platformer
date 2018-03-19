@@ -5,6 +5,8 @@ local tick = require "lib.tick"
 
 assets = require("lib.cargo").init("assets")
 
+local LevelState = require "src.states.levelstate"
+
 menu = {}
 
 function love.load(arg)
@@ -14,7 +16,7 @@ function love.load(arg)
 	memGraph = debugGraph:new("mem", 0, 30)
 
 	gamestate.registerEvents()
-	gamestate.switch(menu)
+	gamestate.switch(LevelState:new())
 end
 
 function love.update(dt)
