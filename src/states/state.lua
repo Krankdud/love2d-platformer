@@ -1,6 +1,9 @@
 local class = require "lib.middleclass"
 local tiny = require "lib.tiny"
 
+local graphs = require "src.graphs"
+local screenScaler = require "src.screenscaler"
+
 local function filterDrawSystem(_, s)
 	-- if nil return false instead of nil
 	return not not s.isDrawSystem
@@ -20,7 +23,12 @@ function State:update(dt)
 end
 
 function State:draw()
+	screenScaler:start()
 	self.world:update(0, filterDrawSystem)
+	screenScaler:finish()
+	screenScaler:draw()
+
+	graphs:draw()
 end
 
 return State
