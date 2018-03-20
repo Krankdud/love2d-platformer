@@ -11,8 +11,8 @@ local function filterUpdateSystem(_, s)
 end
 
 local State = class("State")
-function State:initialize()
-	self.world = tiny.world()
+function State:initialize(...)
+	self.world = tiny.world(...)
 end
 
 function State:update(dt)

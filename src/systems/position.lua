@@ -32,7 +32,12 @@ end
 function PositionSystem:_processAxis(position, axis, prevAxis, subpixelAxis)
 	local x, subpixelX = math.modf(position[axis])
 	position[axis] = x
+	
+	if position[subpixelAxis] == nil then
+		position[subpixelAxis] = 0
+	end
 	position[subpixelAxis] = position[subpixelAxis] + subpixelX
+
 	if math.abs(position[subpixelAxis]) >= 1 then
 		position[axis] = position[axis] + lume.sign(position[subpixelAxis])
 		position[subpixelAxis] = position[subpixelAxis] - lume.sign(position[subpixelAxis])
