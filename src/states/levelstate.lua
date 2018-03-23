@@ -2,14 +2,16 @@ local class = require "lib.middleclass"
 
 local State = require "src.states.state"
 -- Systems
-local DrawSystem          = require "src.systems.draw"
-local IntegrateAxisSystem = require "src.systems.integrateaxis"
-local LimitVelocitySystem = require "src.systems.limitvelocity"
-local PositionSystem      = require "src.systems.position"
-local UpdateSystem        = require "src.systems.update"
+local CollisionDetectionSystem  = require "src.systems.collisiondetection"
+local CollisionResolutionSystem = require "src.systems.collisionresolution"
+local CollisionWithLevelSystem  = require "src.systems.collisionwithlevel"
+local DrawSystem                = require "src.systems.draw"
+local IntegrateAxisSystem       = require "src.systems.integrateaxis"
+local LimitVelocitySystem       = require "src.systems.limitvelocity"
+local PositionSystem            = require "src.systems.position"
+local UpdateSystem              = require "src.systems.update"
 
--- Entities
-local Player = require "src.entities.player"
+local Level = require "src.level"
 
 local LevelState = class("LevelState", State)
 function LevelState:initialize()
@@ -25,10 +27,15 @@ function LevelState:initialize()
 
 		IntegrateAxisSystem:new("y", "position", "velocity"),
 		PositionSystem:new("y"),
+
+		CollisionDetectionSystem,
+		CollisionWithLevelSystem,
+		CollisionResolutionSystem,
+
 		DrawSystem
 	)
 
-	self.world:addEntity(Player:new(16, 100))
+	self.world:addEntity(Level:new("assets/levels/test2.lua", self.world))
 end
 
 return LevelState
