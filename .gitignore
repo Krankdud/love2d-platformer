@@ -121,5 +121,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-
 # End of https://www.gitignore.io/api/osx,git,vim,lua,linux,windows
+
+# log files
+*.log

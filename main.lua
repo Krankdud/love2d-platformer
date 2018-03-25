@@ -1,5 +1,6 @@
 local autobatch = require "lib.autobatch"
 local gamestate = require "lib.hump.gamestate"
+local log = require "lib.log"
 local lurker = require "lib.lurker"
 local tick = require "lib.tick"
 
@@ -21,6 +22,10 @@ local LevelState = require "src.states.levelstate"
 function love.load(arg)
 	tick.rate = 1 / 60
 
+	log.usecolor = false
+	log.outfile = "plat.log"
+	log.createWriter()
+
 	lurker.path = "src"
 
 	graphs:init()
@@ -35,4 +40,9 @@ function love.update(dt)
 
 	graphs:update(dt)
 	input:update()
+end
+
+function love.exit()
+	log.closeWriter()
+	return false
 end

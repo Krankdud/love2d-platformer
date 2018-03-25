@@ -1,3 +1,5 @@
+local log = require "lib.log"
+
 local ScreenScaler = {}
 
 --- Initializes the ScreenScaler.
@@ -23,6 +25,7 @@ function ScreenScaler:init(width, height, keepAspectRatio)
 			self.scale.x = self.scale.y
 		end
 	end
+	log.debug("scale: {" .. self.scale.x .. ", " .. self.scale.y .. "}")
 
 	self.position = {}
 	self.position.x = love.graphics.getWidth() / 2 - self.width / 2 * self.scale.x
