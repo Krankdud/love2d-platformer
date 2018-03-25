@@ -15,9 +15,10 @@ local log = { _version = "0.1.0" }
 log.usecolor = true
 log.outfile = nil
 log.level = "trace"
+log.flush = 50 -- Flush every 50 lines
 
 log._writerCreated = false
-local writerPath = (...):gsub("%.", "/") .. "/logwriter.lua"
+local writerPath = (...):gsub("%.", "/") .. "/writer.lua"
 
 local modes = {
   { name = "trace", color = "\27[34m", },
@@ -94,7 +95,7 @@ function log.createWriter()
   if not log.outfile then return end
 
   log.channel = love.thread.getChannel("__LOGGER__")
-  log.thread = love.thread.newThread(writerPath)
+  log.thread = love.thread.newThread(writerPath, log.flush)
   log.thread:start(log.outfile)
 
   log._writerCreated = true
