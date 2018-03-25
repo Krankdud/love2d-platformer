@@ -1,5 +1,6 @@
 local autobatch = require "lib.autobatch"
 local gamestate = require "lib.hump.gamestate"
+local lurker = require "lib.lurker"
 local tick = require "lib.tick"
 
 assets = require("lib.cargo").init("assets")
@@ -13,6 +14,8 @@ local LevelState = require "src.states.levelstate"
 function love.load(arg)
 	tick.rate = 1 / 60
 
+	lurker.path = "src"
+
 	graphs:init()
 	screenScaler:init(320, 240)
 
@@ -21,7 +24,7 @@ function love.load(arg)
 end
 
 function love.update(dt)
-	require("lib.lurker").update()
+	lurker.update()
 
 	graphs:update(dt)
 	input:update()
