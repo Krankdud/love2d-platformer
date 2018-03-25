@@ -3,7 +3,14 @@ local gamestate = require "lib.hump.gamestate"
 local lurker = require "lib.lurker"
 local tick = require "lib.tick"
 
-assets = require("lib.cargo").init("assets")
+assets = require("lib.cargo").init({
+	dir = "assets",
+	processors = {
+		['images/'] = function(image, filename)
+			image:setFilter("nearest", "nearest")
+		end
+	}
+})
 
 local graphs = require "src.graphs"
 local input = require "src.input"
