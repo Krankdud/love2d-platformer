@@ -3,6 +3,7 @@ local math = math
 local class = require "lib.middleclass"
 local lume = require "lib.lume"
 
+local buffer = require "src.buffer"
 local input = require "src.input"
 
 local Player = class("Player")
@@ -12,12 +13,16 @@ function Player:initialize(x, y, collisionWorld)
 	self.aabb = {width = 16, height = 16, world = collisionWorld}
 	self.collideWithLevel = true
 
-	self.acceleration = {x = 0, y = 0}
+	self.acceleration = {x = 0, y = 0.5}
 	self.velocity = {x = 0, y = 0}
-	self.minVelocity = {x = -4, y = -4}
-	self.maxVelocity = {x = 4, y = 4}
+	self.minVelocity = {x = -4, y = -4000}
+	self.maxVelocity = {x = 4, y = 8}
 
 	collisionWorld:add(self, self.position.x, self.position.y, self.aabb.width, self.aabb.height)
+
+	self.checkJumpPressed = buffer(function() 
+		return input:pressed("jump")
+	end, 10)
 end
 
 function Player:onCollision(collision)
@@ -38,17 +43,9 @@ function Player:update(dt)
 		self.acceleration.x = deaccel * -lume.sign(self.velocity.x)
 	end
 
-	if moveY ~= 0 then
-		self.acceleration.y = moveY
-	else
-		local deaccel
-		if math.abs(self.velocity.y) > 1 then
-			deaccel = 1
-		else
-			deaccel = math.abs(self.velocity.y)
-		end
-
-		self.acceleration.y = deaccel * -lume.sign(self.velocity.y)
+	if self.checkJumpPressed(1) and self.aabb.onGround then
+		self.velocity.y = -8
+		self.aabb.onGround = false
 	end
 end
 

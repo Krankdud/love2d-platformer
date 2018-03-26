@@ -13,6 +13,8 @@ function CollisionWithLevelSystem:process(e, dt)
 				e.velocity.x = 0
 			end
 			if collision.normal.y ~= 0 then
+				e.aabb.onGround = collision.normal.y < 0
+
 				e.velocity.y = 0
 			end
 		end
