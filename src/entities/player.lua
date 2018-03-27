@@ -13,7 +13,7 @@ function Player:initialize(x, y, collisionWorld)
 	self.aabb = {width = 16, height = 16, world = collisionWorld}
 	self.collideWithLevel = true
 
-	self.acceleration = {x = 0, y = 0.5}
+	self.acceleration = {x = 0, y = 0.3}
 	self.velocity = {x = 0, y = 0}
 	self.minVelocity = {x = -2.5, y = -4000}
 	self.maxVelocity = {x = 2.5, y = 8}
@@ -22,7 +22,7 @@ function Player:initialize(x, y, collisionWorld)
 
 	self.bufferJumpPressed = buffer(function() 
 		return input:pressed("jump")
-	end, 4)
+	end, 8)
 	self.bufferOnGround = buffer(function()
 		return self.aabb.onGround
 	end, 8)
@@ -50,9 +50,14 @@ function Player:update(dt)
 		self.acceleration.x = deaccel * -lume.sign(self.velocity.x)
 	end
 
-	if self.bufferJumpPressed(1) and self.bufferOnGround(1) then
-		self.velocity.y = -8
+	local onGround = self.bufferOnGround(1)
+	if self.bufferJumpPressed(1) and onGround and self.velocity.y >= 0 then
+		self.velocity.y = -6
 		self.aabb.onGround = false
+	end
+
+	if not input:down("jump") and self.velocity.y < 0 then
+		self.velocity.y = self.velocity.y / 1.5
 	end
 end
 
