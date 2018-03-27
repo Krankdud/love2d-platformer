@@ -8,7 +8,6 @@ local CollisionWithLevelSystem  = require "src.systems.collisionwithlevel"
 local DrawSystem                = require "src.systems.draw"
 local IntegrateAxisSystem       = require "src.systems.integrateaxis"
 local LimitVelocitySystem       = require "src.systems.limitvelocity"
-local PositionSystem            = require "src.systems.position"
 local UpdateSystem              = require "src.systems.update"
 
 local Level = require "src.level"
@@ -23,10 +22,7 @@ function LevelState:initialize()
 		LimitVelocitySystem,
 
 		IntegrateAxisSystem:new("x", "position", "velocity"),
-		PositionSystem:new("x"),
-
 		IntegrateAxisSystem:new("y", "position", "velocity"),
-		PositionSystem:new("y"),
 
 		CollisionDetectionSystem,
 		CollisionWithLevelSystem,
