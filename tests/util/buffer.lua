@@ -1,4 +1,4 @@
-local buffer = require "src.buffer"
+local buffer = require "src.util.buffer"
 
 describe("buffer", function()
 	local b

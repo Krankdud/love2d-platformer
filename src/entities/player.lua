@@ -3,7 +3,7 @@ local math = math
 local class = require "lib.middleclass"
 local lume = require "lib.lume"
 
-local buffer = require "src.buffer"
+local buffer = require "src.util.buffer"
 local input = require "src.input"
 
 local Player = class("Player")
