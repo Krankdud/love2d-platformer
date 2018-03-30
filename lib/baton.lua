@@ -196,10 +196,10 @@ function Player:_updatePairs()
 		pair.rawY = self._controls[pair.controls[4]].rawValue - self._controls[pair.controls[3]].rawValue
 
 		-- limit to 1
-		local len = (pair.rawX^2 + pair.rawY^2) ^ .5
-		if len > 1 then
-			pair.rawX, pair.rawY = pair.rawX / len, pair.rawY / len
-		end
+		--local len = (pair.rawX^2 + pair.rawY^2) ^ .5
+		--if len > 1 then
+		--	pair.rawX, pair.rawY = pair.rawX / len, pair.rawY / len
+		--end
 
 		-- deadzone
 		if self.config.squareDeadzone then

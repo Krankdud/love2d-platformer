@@ -9,11 +9,13 @@ local function buffer(fn, time)
 	return function(dt, ...)
 		if fn(...) then
 			elapsed = 0
-		elseif elapsed < time then
+		end
+
+		if elapsed <= time then
 			elapsed = elapsed + dt
 		end
 
-		return elapsed < time
+		return elapsed <= time
 	end
 end
 
