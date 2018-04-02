@@ -7,18 +7,18 @@ CollisionWithLevelSystem.filter = tiny.requireAll("velocity", "collideWithLevel"
 -- @param e Entity
 -- @param dt Delta time (not used)
 function CollisionWithLevelSystem:process(e, dt)
-	for _,collision in ipairs(e.aabb.collisions) do
-		if collision.other.properties ~= nil then
-			if collision.normal.x ~= 0 then
-				e.velocity.x = 0
-			end
-			if collision.normal.y ~= 0 then
-				e.aabb.onGround = collision.normal.y < 0
+    for _,collision in ipairs(e.aabb.collisions) do
+        if collision.other.properties ~= nil then
+            if collision.normal.x ~= 0 then
+                e.velocity.x = 0
+            end
+            if collision.normal.y ~= 0 then
+                e.aabb.onGround = collision.normal.y < 0
 
-				e.velocity.y = 0
-			end
-		end
-	end
+                e.velocity.y = 0
+            end
+        end
+    end
 end
 
 return CollisionWithLevelSystem

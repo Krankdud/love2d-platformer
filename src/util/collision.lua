@@ -1,8 +1,8 @@
 local function filterTilemap(item, other)
-	if other.properties ~= nil then 
-		return "slide"
-	end
-	return nil
+    if other.properties ~= nil then 
+        return "slide"
+    end
+    return nil
 end
 
 
@@ -14,8 +14,8 @@ local Collision = {}
 -- @param x x position where the item is checking
 -- @param y y position where the item is checking
 function Collision.isSolid(world, item, x, y)
-	local _, _, _, len = world:check(item, x, y, filterTilemap)
-	return len > 0
+    local _, _, _, len = world:check(item, x, y, filterTilemap)
+    return len > 0
 end
 
 return Collision

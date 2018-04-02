@@ -5,12 +5,12 @@ local lurker = require "lib.lurker"
 local tick = require "lib.tick"
 
 assets = require("lib.cargo").init({
-	dir = "assets",
-	processors = {
-		['images/'] = function(image, filename)
-			image:setFilter("nearest", "nearest")
-		end
-	}
+    dir = "assets",
+    processors = {
+        ['images/'] = function(image, filename)
+            image:setFilter("nearest", "nearest")
+        end
+    }
 })
 
 local graphs = require "src.graphs"
@@ -20,29 +20,29 @@ local screenScaler = require "src.screenscaler"
 local LevelState = require "src.states.levelstate"
 
 function love.load(arg)
-	tick.rate = 1 / 60
+    tick.rate = 1 / 60
 
-	log.usecolor = false
-	log.outfile = "plat.log"
-	log.createWriter()
+    log.usecolor = false
+    log.outfile = "plat.log"
+    log.createWriter()
 
-	lurker.path = "src"
+    lurker.path = "src"
 
-	graphs:init()
-	screenScaler:init(320, 240)
+    graphs:init()
+    screenScaler:init(320, 240)
 
-	gamestate.registerEvents()
-	gamestate.switch(LevelState:new())
+    gamestate.registerEvents()
+    gamestate.switch(LevelState:new())
 end
 
 function love.update(dt)
-	lurker.update()
+    lurker.update()
 
-	graphs:update(dt)
-	input:update()
+    graphs:update(dt)
+    input:update()
 end
 
 function love.exit()
-	log.closeWriter()
-	return false
+    log.closeWriter()
+    return false
 end

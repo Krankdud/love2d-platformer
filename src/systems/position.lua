@@ -11,7 +11,7 @@ PositionSystem.filter = tiny.requireAll("position")
 -- It only processes the position on one of the axes, so two systems are required to process both axes.
 -- @param axis The axis to process ("x" or "y")
 function PositionSystem:initialize(axis)
-	self.axis = axis
+    self.axis = axis
 end
 
 --- Converts the value on an axis to an integer value, and tracks the fractional value.
@@ -21,29 +21,29 @@ end
 -- @param e Entity
 -- @param dt Delta time (not used)
 function PositionSystem:process(e, dt)
-	if self.axis == "x" then
-		self:_processAxis(e.position, "x", "prevX", "subpixelX")
-	else
-		self:_processAxis(e.position, "y", "prevY", "subpixelY")
-	end
+    if self.axis == "x" then
+        self:_processAxis(e.position, "x", "prevX", "subpixelX")
+    else
+        self:_processAxis(e.position, "y", "prevY", "subpixelY")
+    end
 end
 
 -- Private function to handle updating an axis
 function PositionSystem:_processAxis(position, axis, prevAxis, subpixelAxis)
-	local x, subpixelX = math.modf(position[axis])
-	position[axis] = x
-	
-	if position[subpixelAxis] == nil then
-		position[subpixelAxis] = 0
-	end
-	position[subpixelAxis] = position[subpixelAxis] + subpixelX
+    local x, subpixelX = math.modf(position[axis])
+    position[axis] = x
+    
+    if position[subpixelAxis] == nil then
+        position[subpixelAxis] = 0
+    end
+    position[subpixelAxis] = position[subpixelAxis] + subpixelX
 
-	if math.abs(position[subpixelAxis]) >= 1 then
-		position[axis] = position[axis] + lume.sign(position[subpixelAxis])
-		position[subpixelAxis] = position[subpixelAxis] - lume.sign(position[subpixelAxis])
-	end
+    if math.abs(position[subpixelAxis]) >= 1 then
+        position[axis] = position[axis] + lume.sign(position[subpixelAxis])
+        position[subpixelAxis] = position[subpixelAxis] - lume.sign(position[subpixelAxis])
+    end
 
-	position[prevAxis] = position[axis]
+    position[prevAxis] = position[axis]
 end
 
 return PositionSystem

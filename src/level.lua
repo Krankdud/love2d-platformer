@@ -12,23 +12,23 @@ local Level = class("Level")
 -- @param path Path to the level
 -- @param world tiny.world instance to add entities to
 function Level:initialize(path, world)
-	self.map = sti(path, { "bump" })
+    self.map = sti(path, { "bump" })
 
-	self.collisionWorld = bump.newWorld()
-	self.map:bump_init(self.collisionWorld)
+    self.collisionWorld = bump.newWorld()
+    self.map:bump_init(self.collisionWorld)
 
-	local entities = self.map.layers["entities"]
-	for _,object in ipairs(entities.objects) do
-		if object.name == "player" then
-			world:addEntity(Player:new(object.x, object.y, self.collisionWorld))
-		end
-	end
+    local entities = self.map.layers["entities"]
+    for _,object in ipairs(entities.objects) do
+        if object.name == "player" then
+            world:addEntity(Player:new(object.x, object.y, self.collisionWorld))
+        end
+    end
 end
 
 --- Draws the tile layers
 function Level:draw()
-	love.graphics.setColor(255, 255, 255)
-	self.map:drawTileLayer("collision")
+    love.graphics.setColor(255, 255, 255)
+    self.map:drawTileLayer("collision")
 end
 
 return Level

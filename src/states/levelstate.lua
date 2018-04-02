@@ -15,30 +15,30 @@ local Level = require "src.level"
 
 local LevelState = class("LevelState", State)
 function LevelState:initialize()
-	State.initialize(self,
-		TimerSystem,
-		UpdateSystem,
+    State.initialize(self,
+        TimerSystem,
+        UpdateSystem,
 
-		IntegrateAxisSystem:new("x", "velocity", "acceleration"),
-		IntegrateAxisSystem:new("y", "velocity", "acceleration"),
-		LimitVelocitySystem,
+        IntegrateAxisSystem:new("x", "velocity", "acceleration"),
+        IntegrateAxisSystem:new("y", "velocity", "acceleration"),
+        LimitVelocitySystem,
 
-		IntegrateAxisSystem:new("x", "position", "velocity"),
-		IntegrateAxisSystem:new("y", "position", "velocity"),
+        IntegrateAxisSystem:new("x", "position", "velocity"),
+        IntegrateAxisSystem:new("y", "position", "velocity"),
 
-		CollisionDetectionSystem,
-		CollisionWithLevelSystem,
-		CollisionResolutionSystem,
+        CollisionDetectionSystem,
+        CollisionWithLevelSystem,
+        CollisionResolutionSystem,
 
-		DrawSystem
-	)
+        DrawSystem
+    )
 
-	self.world:addEntity(Level:new("assets/levels/test2.lua", self.world))
+    self.world:addEntity(Level:new("assets/levels/test2.lua", self.world))
 end
 
 function LevelState:update(dt)
-	Timer.update(dt)
-	State.update(self)
+    Timer.update(dt)
+    State.update(self)
 end
 
 return LevelState

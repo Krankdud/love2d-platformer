@@ -5,18 +5,18 @@
 -- @return A function that takes delta time as an argument and returns true or false
 --         if the condition has been met within the buffer time
 local function buffer(fn, time)
-	local elapsed = time
-	return function(dt, ...)
-		if fn(...) then
-			elapsed = 0
-		end
+    local elapsed = time
+    return function(dt, ...)
+        if fn(...) then
+            elapsed = 0
+        end
 
-		if elapsed <= time then
-			elapsed = elapsed + dt
-		end
+        if elapsed <= time then
+            elapsed = elapsed + dt
+        end
 
-		return elapsed <= time
-	end
+        return elapsed <= time
+    end
 end
 
 return buffer
