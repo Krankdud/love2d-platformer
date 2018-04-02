@@ -3,6 +3,7 @@ local math = math
 local class = require "lib.middleclass"
 local log = require "lib.log"
 local lume = require "lib.lume"
+local Timer = require "lib.hump.timer"
 
 local buffer = require "src.util.buffer"
 local collision = require "src.util.collision"
@@ -31,17 +32,17 @@ function Player:initialize(x, y, collisionWorld)
 	end, 8)
 
 	self.stateMachine = StateMachine:new(self, {
-		update = self.defaultUpdate, 
-		draw = self.defaultDraw,
-		enter = self.defaultEnter
+		enter = "defaultEnter",
+		update = "defaultUpdate",
+		draw = "defaultDraw"
 	})
 	self.stateMachine:addState("climb", {
-		update = self.climbUpdate,
-		enter = self.climbEnter
+		enter = "climbEnter",
+		update = "climbUpdate"
 	})
 	self.stateMachine:addState("wallJump", {
-		update = self.wallJumpUpdate,
-		enter = self.wallJumpEnter
+		enter = "wallJumpEnter",
+		update = "wallJumpUpdate"
 	})
 end
 
@@ -84,6 +85,7 @@ function Player:defaultUpdate(dt)
 	if self.bufferJumpPressed(1) and onGround and self.velocity.y >= 0 then
 		self.velocity.y = -6
 		self.aabb.onGround = false
+		self.bufferJumpPressed(999)
 	end
 
 	if not input:down("jump") and self.velocity.y < 0 then
@@ -103,7 +105,6 @@ function Player:defaultEnter()
 	self.minVelocity.y = -4000
 	self.maxVelocity.x = 2.5
 	self.maxVelocity.y = 8
-	self.bufferJumpPressed(999)
 end
 
 function Player:climbUpdate(dt)
@@ -121,8 +122,8 @@ function Player:climbUpdate(dt)
 
 	if self.bufferJumpPressed(1) then
 		self.velocity.x = 2.5 * -moveX
-		self.velocity.y = -6
-		return "default"
+		self.bufferJumpPressed(999)
+		return "wallJump"
 	end
 end
 
@@ -131,13 +132,25 @@ function Player:climbEnter()
 	self.acceleration.y = -1
 	self.velocity.y = 0
 	self.minVelocity.y = -3
-	self.bufferJumpPressed(999)
 end
 
 function Player:wallJumpUpdate()
+	if not input:down("jump") and self.velocity.y < 0 then
+		self.velocity.y = self.velocity.y / 1.5
+	end
 end
 
 function Player:wallJumpEnter()
+	self.acceleration.x = 0
+	self.acceleration.y = 0.3
+	self.minVelocity.x = -2.5
+	self.minVelocity.y = -4000
+	self.maxVelocity.x = 2.5
+	self.maxVelocity.y = 8
+
+	self.velocity.y = -6
+
+	Timer.after(0.15, function() self.stateMachine:setState("default") end)
 end
 
 return Player

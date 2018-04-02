@@ -1,4 +1,5 @@
 local class = require "lib.middleclass"
+local Timer = require "lib.hump.timer"
 
 local State = require "src.states.state"
 -- Systems
@@ -15,6 +16,7 @@ local Level = require "src.level"
 local LevelState = class("LevelState", State)
 function LevelState:initialize()
 	State.initialize(self,
+		TimerSystem,
 		UpdateSystem,
 
 		IntegrateAxisSystem:new("x", "velocity", "acceleration"),
@@ -32,6 +34,11 @@ function LevelState:initialize()
 	)
 
 	self.world:addEntity(Level:new("assets/levels/test2.lua", self.world))
+end
+
+function LevelState:update(dt)
+	Timer.update(dt)
+	State.update(self)
 end
 
 return LevelState
