@@ -1,3 +1,6 @@
+--- System that resolves collision with the level.
+-- Requires entities to have "aabb", "collideWithLevel", and "velocity" components.
+
 local tiny = require "lib.tiny"
 
 local CollisionWithLevelSystem = tiny.processingSystem()

@@ -1,3 +1,6 @@
+--- System that calls collision resolution functions in entities.
+-- Requires entities to have the "aabb" component and an "onCollision" function.
+
 local tiny = require "lib.tiny"
 
 local CollisionResolutionSystem = tiny.processingSystem()

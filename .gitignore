@@ -125,3 +125,6 @@ $RECYCLE.BIN/
 
 # log files
 *.log
+
+# ldoc output
+doc/

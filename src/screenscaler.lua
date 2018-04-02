@@ -1,3 +1,7 @@
+--- ScreenScaler controls scaling the game from a low resolution to a higher resolution using a canvas.
+-- This does not attempt to force scaling by an integer, so the window resolution would need to be an integer
+-- multiple of the game's resolution if you want to scale by an integer.
+
 local log = require "lib.log"
 
 local ScreenScaler = {}

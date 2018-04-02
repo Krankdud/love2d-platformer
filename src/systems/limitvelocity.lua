@@ -1,3 +1,6 @@
+--- System that limits velocity.
+-- Requires entities to have a "velocity" component and either a "minVelocity" or a "maxVelocity" component.
+
 local tiny = require "lib.tiny"
 
 local math = math

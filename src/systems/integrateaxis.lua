@@ -1,3 +1,5 @@
+--- System that integrates over an axis.
+
 local class = require "lib.middleclass"
 local tiny = require "lib.tiny"
 

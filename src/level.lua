@@ -1,3 +1,6 @@
+--- Loads Tiled maps
+-- TODO: Documentation on layers, format, etc.
+
 local bump = require "lib.bump"
 local class = require "lib.middleclass"
 local sti = require "lib.sti"
@@ -8,7 +11,6 @@ local Player = require "src.entities.player"
 local Level = class("Level")
 --- Creates a level from a Tiled map.
 -- Tiled map needs to have a collision layer and an entities layer.
--- TODO: More documentation on format
 -- @param path Path to the level
 -- @param world tiny.world instance to add entities to
 function Level:initialize(path, world)

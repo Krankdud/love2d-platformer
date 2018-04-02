@@ -1,3 +1,5 @@
+--- LevelState is the main gameplay state.
+
 local class = require "lib.middleclass"
 local Timer = require "lib.hump.timer"
 
@@ -14,6 +16,7 @@ local UpdateSystem              = require "src.systems.update"
 local Level = require "src.level"
 
 local LevelState = class("LevelState", State)
+--- Initializes the state and loads a level
 function LevelState:initialize()
     State.initialize(self,
         UpdateSystem,
@@ -35,6 +38,8 @@ function LevelState:initialize()
     self.world:addEntity(Level:new("assets/levels/test2.lua", self.world))
 end
 
+--- Updates the state
+-- @param dt Delta time
 function LevelState:update(dt)
     Timer.update(dt)
     State.update(self)

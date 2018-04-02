@@ -1,3 +1,6 @@
+--- Graphs with debugging info.
+-- Used to display the fps graph and the memory graph
+
 local debugGraph = require "lib.debugGraph"
 
 local Graphs = {}

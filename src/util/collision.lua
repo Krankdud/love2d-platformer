@@ -1,3 +1,5 @@
+--- Utility functions for helping with collision detection
+
 local function filterTilemap(_, other)
     if other.properties ~= nil then
         return "slide"

@@ -1,3 +1,5 @@
+--- Utility function for adding buffering
+
 --- Returns a wrapper function that will return true until an elapsed amount of time has passed
 -- Useful for adding a buffer to inputs.
 -- @param fn Function that will be buffered. The function should return true or false

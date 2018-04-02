@@ -1,3 +1,5 @@
+--- State machine
+
 local class = require "lib.middleclass"
 
 local StateMachine = class("StateMachine")
