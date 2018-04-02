@@ -7,8 +7,7 @@ LimitVelocitySystem.filter = tiny.filter("velocity&(minVelocity|maxVelocity)")
 
 --- Limits the velocity of entities.
 -- @param e Entity
--- @param dt Delta time (not used)
-function LimitVelocitySystem:process(e, dt)
+function LimitVelocitySystem:process(e)
     if e.minVelocity then
         e.velocity.x = math.max(e.velocity.x, e.minVelocity.x)
         e.velocity.y = math.max(e.velocity.y, e.minVelocity.y)

@@ -7,7 +7,7 @@ local math = math
 local PositionSystem = tiny.processingSystem(class("PositionSystem"))
 PositionSystem.filter = tiny.requireAll("position")
 
---- System that processes entities with a position component. 
+--- System that processes entities with a position component.
 -- It only processes the position on one of the axes, so two systems are required to process both axes.
 -- @param axis The axis to process ("x" or "y")
 function PositionSystem:initialize(axis)
@@ -19,8 +19,7 @@ end
 -- The entity's prevX and prevY is also set to the x and y after processing the value,
 -- so it can be accessed after modifying the x or y value on the next iteration.
 -- @param e Entity
--- @param dt Delta time (not used)
-function PositionSystem:process(e, dt)
+function PositionSystem:process(e)
     if self.axis == "x" then
         self:_processAxis(e.position, "x", "prevX", "subpixelX")
     else
@@ -32,7 +31,7 @@ end
 function PositionSystem:_processAxis(position, axis, prevAxis, subpixelAxis)
     local x, subpixelX = math.modf(position[axis])
     position[axis] = x
-    
+
     if position[subpixelAxis] == nil then
         position[subpixelAxis] = 0
     end

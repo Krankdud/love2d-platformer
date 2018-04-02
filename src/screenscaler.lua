@@ -4,10 +4,10 @@ local ScreenScaler = {}
 
 --- Initializes the ScreenScaler.
 -- This creates a canvas with the given width and height that will be used to draw everything that needs to
--- be scaled. The canvas will be scaled to the width and height of the screen. 
+-- be scaled. The canvas will be scaled to the width and height of the screen.
 -- @param width Width of the canvas
 -- @param height Height of the canvas
--- @param keepAspectRatio Ensure that the ratio between width and height of the canvas remain 1:1. Defaults to true. 
+-- @param keepAspectRatio Ensure that the ratio between width and height of the canvas remain 1:1. Defaults to true.
 function ScreenScaler:init(width, height, keepAspectRatio)
     if keepAspectRatio == nil then
         keepAspectRatio = true

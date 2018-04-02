@@ -4,7 +4,7 @@ local DrawSystem = tiny.processingSystem()
 DrawSystem.isDrawSystem = true
 DrawSystem.filter = tiny.requireAll("draw")
 
-function DrawSystem:process(e, dt)
+function DrawSystem:process(e)
     e:draw()
 end
 

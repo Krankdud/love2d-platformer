@@ -24,7 +24,7 @@ function Player:initialize(x, y, collisionWorld)
 
     collisionWorld:add(self, self.position.x, self.position.y, self.aabb.width, self.aabb.height)
 
-    self.bufferJumpPressed = buffer(function() 
+    self.bufferJumpPressed = buffer(function()
         return input:pressed("jump")
     end, 8)
     self.bufferOnGround = buffer(function()
@@ -46,9 +46,6 @@ function Player:initialize(x, y, collisionWorld)
     })
 end
 
-function Player:onCollision(collision)
-end
-
 function Player:update(dt)
     self.stateMachine:update(dt)
 end
@@ -57,7 +54,7 @@ function Player:draw()
     self.stateMachine:draw()
 end
 
-function Player:defaultUpdate(dt)
+function Player:defaultUpdate()
     if self.velocity.y ~= 0 then
         self.aabb.onGround = false
     end
@@ -107,7 +104,7 @@ function Player:defaultEnter()
     self.maxVelocity.y = 8
 end
 
-function Player:climbUpdate(dt)
+function Player:climbUpdate()
     local moveX, moveY = input:get("movePair")
 
     if moveY ~= -1 then

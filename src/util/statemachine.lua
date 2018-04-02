@@ -10,7 +10,7 @@ function StateMachine:initialize(object, default)
 
     self.states["default"] = default or {}
 
-    self.currentId = "default" 
+    self.currentId = "default"
 end
 
 --- Add a state to the machine.
@@ -32,7 +32,7 @@ end
 -- Note: The keys are used rather than the functions themselves so they can be easily
 -- hotswapped using lurker.
 -- @param id Id of the state
--- @param state Table 
+-- @param state Table
 function StateMachine:addState(id, state)
     self.states[id] = state
 end

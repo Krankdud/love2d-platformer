@@ -1,6 +1,6 @@
 local debugGraph = require "lib.debugGraph"
 
-Graphs = {}
+local Graphs = {}
 
 --- Initializes the debug graphs
 function Graphs:init()
@@ -23,7 +23,7 @@ function Graphs:draw()
 
     love.graphics.setColor(0, 0, 0, 128)
     love.graphics.rectangle("fill", 0, 0, 96, 64)
-    
+
     love.graphics.setColor(255, 255, 255, 255)
     self.fpsGraph:draw()
     self.memGraph:draw()

@@ -24,8 +24,7 @@ end
 
 --- Adds the differential component to the integral component on an axis.
 -- @param e Entity
--- @param dt Delta time (not used)
-function IntegrateAxisSystem:process(e, dt)
+function IntegrateAxisSystem:process(e)
     local eIntegral = e[self.integral]
     local eDifferential = e[self.differential]
     eIntegral[self.axis] = eIntegral[self.axis] + eDifferential[self.axis]

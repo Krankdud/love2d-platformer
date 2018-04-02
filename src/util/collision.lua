@@ -1,5 +1,5 @@
-local function filterTilemap(item, other)
-    if other.properties ~= nil then 
+local function filterTilemap(_, other)
+    if other.properties ~= nil then
         return "slide"
     end
     return nil

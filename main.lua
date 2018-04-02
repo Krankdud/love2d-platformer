@@ -1,4 +1,4 @@
-local autobatch = require "lib.autobatch"
+require "lib.autobatch"
 local gamestate = require "lib.hump.gamestate"
 local log = require "lib.log"
 local lurker = require "lib.lurker"
@@ -7,7 +7,7 @@ local tick = require "lib.tick"
 assets = require("lib.cargo").init({
     dir = "assets",
     processors = {
-        ['images/'] = function(image, filename)
+        ['images/'] = function(image)
             image:setFilter("nearest", "nearest")
         end
     }
@@ -19,7 +19,7 @@ local screenScaler = require "src.screenscaler"
 
 local LevelState = require "src.states.levelstate"
 
-function love.load(arg)
+function love.load()
     tick.rate = 1 / 60
 
     log.usecolor = false

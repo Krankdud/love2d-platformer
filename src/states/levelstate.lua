@@ -16,7 +16,6 @@ local Level = require "src.level"
 local LevelState = class("LevelState", State)
 function LevelState:initialize()
     State.initialize(self,
-        TimerSystem,
         UpdateSystem,
 
         IntegrateAxisSystem:new("x", "velocity", "acceleration"),
