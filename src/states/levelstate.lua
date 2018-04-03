@@ -35,7 +35,7 @@ function LevelState:initialize()
         DrawSystem
     )
 
-    self.world:addEntity(Level:new("assets/levels/test2.lua", self.world))
+    -- self.world:addEntity(Level:new("assets/levels/test2.lua", self.world))
 end
 
 --- Updates the state
