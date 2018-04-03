@@ -24,10 +24,10 @@ end
 function Graphs:draw()
     if not self.visible then return end
 
-    love.graphics.setColor(0, 0, 0, 128)
+    love.graphics.setColor(0, 0, 0, 0.5)
     love.graphics.rectangle("fill", 0, 0, 96, 64)
 
-    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(1.0, 1.0, 1.0)
     self.fpsGraph:draw()
     self.memGraph:draw()
 end

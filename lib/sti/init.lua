@@ -114,7 +114,6 @@ function Map:init(path, plugins, ox, oy)
 
     -- Set layers
     for _, layer in ipairs(self.layers) do
-        print(layer.name)
         self:setLayer(layer, path)
     end
 end

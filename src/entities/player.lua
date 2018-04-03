@@ -91,7 +91,7 @@ function Player:defaultUpdate()
 end
 
 function Player:defaultDraw()
-    love.graphics.setColor(255, 255, 0)
+    love.graphics.setColor(1.0, 1.0, 0.0)
     love.graphics.rectangle("fill", self.position.x, self.position.y, self.aabb.width, self.aabb.height)
 end
 

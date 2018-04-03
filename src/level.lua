@@ -29,7 +29,7 @@ end
 
 --- Draws the tile layers
 function Level:draw()
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(1.0, 1.0, 1.0)
     self.map:drawTileLayer("collision")
 end
 

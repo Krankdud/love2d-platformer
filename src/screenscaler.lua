@@ -57,7 +57,7 @@ function ScreenScaler:draw()
     local prevMode, prevAlphaMode = love.graphics.getBlendMode()
 
     love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(1.0, 1.0, 1.0)
     love.graphics.draw(self.canvas, self.position.x, self.position.y, 0, self.scale.x, self.scale.y)
     love.graphics.setBlendMode(prevMode, prevAlphaMode)
 end

@@ -30,7 +30,7 @@ local function switchActiveImage(img)
     b.sb:clear()
     b.count = 0
   else
-    love_graphics.setColor(255, 255, 255)
+    love_graphics.setColor(1.0, 1.0, 1.0)
   end
   -- Activate spritebatch if image was not nil
   if img then
@@ -128,7 +128,7 @@ end
 
 function autobatch.reset()
   autobatch.flush()
-  autobatch.setColor(255, 255, 255, 255)
+  autobatch.setColor(1.0, 1.0, 1.0, 1.0)
   love_graphics.reset()
 end
 
