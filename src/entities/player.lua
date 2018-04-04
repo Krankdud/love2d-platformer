@@ -30,6 +30,12 @@ function Player:initialize(x, y, collisionWorld)
     self.bufferOnGround = buffer(function()
         return self.aabb.onGround
     end, 8)
+    self.bufferNearLeftWall = buffer(function()
+        return collision.isSolid(self.aabb.world, self, self.position.x - 1, self.position.y)
+    end, 6)
+    self.bufferNearRightWall = buffer(function()
+        return collision.isSolid(self.aabb.world, self, self.position.x + 1, self.position.y)
+    end, 6)
 
     self.stateMachine = StateMachine:new(self, {
         enter = "defaultEnter",
@@ -44,6 +50,8 @@ function Player:initialize(x, y, collisionWorld)
         enter = "wallJumpEnter",
         update = "wallJumpUpdate"
     })
+
+    self.climbDirection = 1
 end
 
 function Player:update(dt)
@@ -75,14 +83,33 @@ function Player:defaultUpdate()
 
     if moveX ~= 0 and moveY == -1 and collision.isSolid(self.aabb.world, self, self.position.x + moveX, self.position.y) then
         log.debug("switching state to climb")
+        self.climbDirection = moveX
         return "climb"
     end
 
+    -- Handle buffers
     local onGround = self.bufferOnGround(1)
-    if self.bufferJumpPressed(1) and onGround and self.velocity.y >= 0 then
+    local jumpPressed = self.bufferJumpPressed(1)
+    local nearLeftWall = self.bufferNearLeftWall(1)
+    local nearRightWall = self.bufferNearRightWall(1)
+    -- Jumping
+    if jumpPressed and onGround and self.velocity.y >= 0 then
         self.velocity.y = -6
         self.aabb.onGround = false
         self.bufferJumpPressed(999)
+    end
+
+    -- Walljumping
+    if jumpPressed and not onGround and (nearLeftWall or nearRightWall) then
+        local direction = 0
+        if nearLeftWall then
+            direction = 1
+        elseif nearRightWall then
+            direction = -1
+        end
+        self.velocity.x = 2.5 * direction
+        self.bufferJumpPressed(999)
+        return "wallJump"
     end
 
     if not input:down("jump") and self.velocity.y < 0 then
@@ -96,6 +123,7 @@ function Player:defaultDraw()
 end
 
 function Player:defaultEnter()
+    log.debug("switching player state to default")
     self.acceleration.x = 0
     self.acceleration.y = 0.3
     self.minVelocity.x = -2.5
@@ -107,24 +135,23 @@ end
 function Player:climbUpdate()
     local moveX, moveY = input:get("movePair")
 
-    if moveY ~= -1 then
-        log.debug("switching state to default")
+    if moveX ~= self.climbDirection or moveY ~= -1 then
         return "default"
     end
 
-    if not collision.isSolid(self.aabb.world, self, self.position.x + moveX, self.position.y) then
-        log.debug("switching state to default")
+    if not collision.isSolid(self.aabb.world, self, self.position.x + self.climbDirection, self.position.y) then
         return "default"
     end
 
     if self.bufferJumpPressed(1) then
-        self.velocity.x = 2.5 * -moveX
+        self.velocity.x = 2.5 * -self.climbDirection
         self.bufferJumpPressed(999)
         return "wallJump"
     end
 end
 
 function Player:climbEnter()
+    log.debug("switching player state to climb")
     self.acceleration.x = 0
     self.acceleration.y = -1
     self.velocity.y = 0
@@ -138,6 +165,7 @@ function Player:wallJumpUpdate()
 end
 
 function Player:wallJumpEnter()
+    log.debug("switching player state to walljump")
     self.acceleration.x = 0
     self.acceleration.y = 0.3
     self.minVelocity.x = -2.5

@@ -48,6 +48,12 @@ function StateMachine:setState(id)
     end
 end
 
+--- Gets the current state of the machine.
+-- @return state Current state
+function StateMachine:getState()
+    return self.currentId
+end
+
 --- Calls the update function of the current state.
 -- Also handles switching states if the update returns the name of a new state.
 -- @param ... Additional arguments to pass to the update function

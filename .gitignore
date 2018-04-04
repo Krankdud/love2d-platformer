@@ -99,6 +99,7 @@ Session.vim
 .netrwhist
 # auto-generated tag files
 tags
+tags.*
 
 ### Windows ###
 # Windows thumbnail cache files
