@@ -128,11 +128,11 @@ function lurker.onerror(e, nostacktrace)
                      lume.trim((debug.traceback("", 2):gsub("\t", "")))
   local msg = lume.format("{1}\n\n{2}", {e, stacktrace})
   local colors = {
-    { lume.color("#1e1e2c", 256) },
-    { lume.color("#f0a3a3", 256) },
-    { lume.color("#92b5b0", 256) },
-    { lume.color("#66666a", 256) },
-    { lume.color("#cdcdcd", 256) },
+    { lume.color("#1e1e2c") },
+    { lume.color("#f0a3a3") },
+    { lume.color("#92b5b0") },
+    { lume.color("#66666a") },
+    { lume.color("#cdcdcd") },
   }
   love.graphics.reset()
   love.graphics.setFont(love.graphics.newFont(12))
