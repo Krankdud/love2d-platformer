@@ -5,6 +5,8 @@ local bump = require "lib.bump"
 local class = require "lib.middleclass"
 local sti = require "lib.sti"
 
+local Camera = require "src.camera"
+
 -- Entities
 local Player = require "src.entities.player"
 
@@ -22,7 +24,9 @@ function Level:initialize(path, world)
     local entities = self.map.layers["entities"]
     for _,object in ipairs(entities.objects) do
         if object.name == "player" then
-            world:addEntity(Player:new(object.x, object.y, self.collisionWorld))
+            local player = Player:new(object.x, object.y, self.collisionWorld)
+            Camera:setFollow(player)
+            world:addEntity(player)
         end
     end
 end
