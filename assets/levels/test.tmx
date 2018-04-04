@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
  <tileset firstgid="1" name="grid" tilewidth="16" tileheight="16" tilecount="1" columns="1">
   <image source="../graphics/grid.png" width="16" height="16"/>
  </tileset>
- <layer name="collision" width="20" height="15">
+ <layer name="collision" width="100" height="50">
   <properties>
    <property name="collidable" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwCmFIwat6oeaPmEW/eYMUAKFcAfQ==
+   eJzt2EkKwzAQRUH5/pfO3gZZnjqfpgqyEQIND+wk2xhjK/7sXR3vrLqFHnOVZ96vddZLj9q19Dj6Z4+353egR5aqM5+905/O7yKhx2xMj2/X0WNu5S5Wf0esrKPHXMJ5E/aQIuEuEvaQIuEuEvaQ4u3/pu489+/M7dpPj/70yKJHFj2y6JFFjyxff2fTAwAAAAAAAAAAAACgnx8mUwEn
   </data>
  </layer>
  <objectgroup name="entities">

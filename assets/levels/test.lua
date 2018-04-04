@@ -4,8 +4,8 @@ return {
   tiledversion = "1.1.4",
   orientation = "orthogonal",
   renderorder = "right-down",
-  width = 20,
-  height = 15,
+  width = 100,
+  height = 50,
   tilewidth = 16,
   tileheight = 16,
   nextobjectid = 2,
@@ -42,8 +42,8 @@ return {
       name = "collision",
       x = 0,
       y = 0,
-      width = 20,
-      height = 15,
+      width = 100,
+      height = 50,
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -53,7 +53,7 @@ return {
       },
       encoding = "base64",
       compression = "zlib",
-      data = "eJxjZGBgYBwCmFIwat6oeaPmEW/eYMUAKFcAfQ=="
+      data = "eJzt2EkKwzAQRUH5/pfO3gZZnjqfpgqyEQIND+wk2xhjK/7sXR3vrLqFHnOVZ96vddZLj9q19Dj6Z4+353egR5aqM5+905/O7yKhx2xMj2/X0WNu5S5Wf0esrKPHXMJ5E/aQIuEuEvaQIuEuEvaQ4u3/pu489+/M7dpPj/70yKJHFj2y6JFFjyxff2fTAwAAAAAAAAAAAACgnx8mUwEn"
     },
     {
       type = "objectgroup",

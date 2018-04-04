@@ -10,6 +10,8 @@ local collision = require "src.util.collision"
 local input = require "src.input"
 local StateMachine = require "src.util.statemachine"
 
+local BONK_PENALTY = 0.3
+
 local Player = class("Player")
 function Player:initialize(x, y, collisionWorld)
     self.position = {x = x, y = y}
@@ -46,12 +48,17 @@ function Player:initialize(x, y, collisionWorld)
         enter = "climbEnter",
         update = "climbUpdate"
     })
+    self.stateMachine:addState("ceiling", {
+        enter = "ceilingEnter",
+        update = "ceilingUpdate"
+    })
     self.stateMachine:addState("wallJump", {
         enter = "wallJumpEnter",
         update = "wallJumpUpdate"
     })
 
     self.climbDirection = 1
+    self.canClimb = true
 end
 
 function Player:update(dt)
@@ -81,10 +88,14 @@ function Player:defaultUpdate()
         self.acceleration.x = deaccel * -lume.sign(self.velocity.x)
     end
 
-    if moveX ~= 0 and moveY == -1 and collision.isSolid(self.aabb.world, self, self.position.x + moveX, self.position.y) then
-        log.debug("switching state to climb")
-        self.climbDirection = moveX
-        return "climb"
+    if moveX ~= 0 and moveY == -1 and self.canClimb then
+        if collision.isSolid(self.aabb.world, self, self.position.x + moveX, self.position.y) then
+            self.climbDirection = moveX
+            return "climb"
+        elseif collision.isSolid(self.aabb.world, self, self.position.x, self.position.y - 1) then
+            self.ceilingDirection = moveX
+            return "ceiling"
+        end
     end
 
     -- Handle buffers
@@ -97,6 +108,7 @@ function Player:defaultUpdate()
         self.velocity.y = -6
         self.aabb.onGround = false
         self.bufferJumpPressed(999)
+        self.bufferOnGround(999)
     end
 
     -- Walljumping
@@ -143,6 +155,14 @@ function Player:climbUpdate()
         return "default"
     end
 
+    if collision.isSolid(self.aabb.world, self, self.position.x, self.position.y - 1) then
+        self.canClimb = false
+        Timer.after(BONK_PENALTY, function()
+            self.canClimb = true
+        end)
+        return "default"
+    end
+
     if self.bufferJumpPressed(1) then
         self.velocity.x = 2.5 * -self.climbDirection
         self.bufferJumpPressed(999)
@@ -158,9 +178,43 @@ function Player:climbEnter()
     self.minVelocity.y = -3
 end
 
+function Player:ceilingUpdate()
+    local moveX, moveY = input:get("movePair")
+
+    if moveX ~= self.ceilingDirection or moveY ~= -1 then
+        return "default"
+    end
+
+    if not collision.isSolid(self.aabb.world, self, self.position.x, self.position.y - 1) then
+        return "default"
+    end
+
+    if collision.isSolid(self.aabb.world, self, self.position.x + self.ceilingDirection, self.position.y) then
+        self.canClimb = false
+        Timer.after(BONK_PENALTY, function()
+            self.canClimb = true
+        end)
+        return "default"
+    end
+end
+
+function Player:ceilingEnter()
+    log.debug("switching player state to ceiling")
+    self.acceleration.x = self.ceilingDirection
+    self.acceleration.y = 0
+    self.minVelocity.x = -2.5
+    self.minVelocity.y = -4000
+    self.maxVelocity.x = 2.5
+    self.maxVelocity.y = 8
+end
+
 function Player:wallJumpUpdate()
     if not input:down("jump") and self.velocity.y < 0 then
         self.velocity.y = self.velocity.y / 1.5
+    end
+
+    if self.velocity.y < 0 and collision.isSolid(self.aabb.world, self, self.position.x, self.position.y + self.velocity.y) then
+        return "default"
     end
 end
 
@@ -175,7 +229,11 @@ function Player:wallJumpEnter()
 
     self.velocity.y = -6
 
-    Timer.after(0.15, function() self.stateMachine:setState("default") end)
+    Timer.after(0.15, function()
+        if self.stateMachine:getState() == "wallJump" then
+            self.stateMachine:setState("default")
+        end
+    end)
 end
 
 return Player
