@@ -1,6 +1,7 @@
 --- LevelState is the main gameplay state.
 
 local class = require "lib.middleclass"
+local gamestate = require "lib.hump.gamestate"
 
 local State = require "src.states.state"
 -- Systems
@@ -45,6 +46,23 @@ function LevelState:initialize()
 
     Camera:new()
     self.world:addEntity(Level:new("assets/levels/test.lua", self.world))
+end
+
+function LevelState:leave()
+    self.world:clearSystems()
+    self.world:clearEntities()
+    self.world:refresh()
+end
+
+function LevelState:update(dt)
+    State.update(self, dt)
+
+    if love.keyboard.isScancodeDown("f5") then
+        self.world:clearSystems()
+        self.world:clearEntities()
+        self.world:refresh()
+        gamestate.switch(LevelState:new())
+    end
 end
 
 return LevelState

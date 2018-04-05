@@ -33,11 +33,11 @@ function Player:initialize(x, y, collisionWorld)
         return self.aabb.onGround
     end, 8)
     self.bufferNearLeftWall = buffer(function()
-        return collision.isSolid(self.aabb.world, self, self.position.x - 1, self.position.y)
-    end, 6)
+        return collision.isSolid(self.aabb.world, self, self.position.x - 4, self.position.y)
+    end, 4)
     self.bufferNearRightWall = buffer(function()
-        return collision.isSolid(self.aabb.world, self, self.position.x + 1, self.position.y)
-    end, 6)
+        return collision.isSolid(self.aabb.world, self, self.position.x + 4, self.position.y)
+    end, 4)
 
     self.stateMachine = StateMachine:new(self, {
         enter = "defaultEnter",
@@ -56,6 +56,9 @@ function Player:initialize(x, y, collisionWorld)
         enter = "wallJumpEnter",
         update = "wallJumpUpdate"
     })
+    self.stateMachine:addState("ceilingHang", {
+        enter = "ceilingHangEnter"
+    })
 
     self.climbDirection = 1
     self.canClimb = true
@@ -70,10 +73,6 @@ function Player:draw()
 end
 
 function Player:defaultUpdate()
-    if self.velocity.y ~= 0 then
-        self.aabb.onGround = false
-    end
-
     local moveX, moveY = input:get("movePair")
     if moveX ~= 0 then
         self.acceleration.x = moveX
@@ -94,6 +93,7 @@ function Player:defaultUpdate()
             return "climb"
         elseif collision.isSolid(self.aabb.world, self, self.position.x, self.position.y - 1) then
             self.ceilingDirection = moveX
+            self.aabb.onCeiling = false
             return "ceiling"
         end
     end
@@ -126,6 +126,10 @@ function Player:defaultUpdate()
 
     if not input:down("jump") and self.velocity.y < 0 then
         self.velocity.y = self.velocity.y / 1.5
+    end
+
+    if self.aabb.onCeiling then
+        return "ceilingHang"
     end
 end
 
@@ -231,6 +235,23 @@ function Player:wallJumpEnter()
 
     Timer.after(0.15, function()
         if self.stateMachine:getState() == "wallJump" then
+            self.stateMachine:setState("default")
+        end
+    end)
+end
+
+function Player:ceilingHangEnter()
+    log.debug("switching player state to ceilingHang")
+    self.acceleration.x = 0
+    self.acceleration.y = 0
+    self.minVelocity.x = -2.5
+    self.minVelocity.y = -4000
+    self.maxVelocity.x = 2.5
+    self.maxVelocity.y = 8
+    self.velocity.y = 0
+
+    Timer.after(0.2, function()
+        if self.stateMachine:getState() == "ceilingHang" then
             self.stateMachine:setState("default")
         end
     end)

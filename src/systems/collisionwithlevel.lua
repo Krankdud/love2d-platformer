@@ -9,6 +9,8 @@ CollisionWithLevelSystem.filter = tiny.requireAll("velocity", "collideWithLevel"
 --- Resolves collision between entity and level by setting the velocity to 0.
 -- @param e Entity
 function CollisionWithLevelSystem:process(e)
+    e.aabb.onGround = false
+    e.aabb.onCeiling = false
     for _,collision in ipairs(e.aabb.collisions) do
         if collision.other.properties ~= nil then
             if collision.normal.x ~= 0 then
@@ -16,6 +18,7 @@ function CollisionWithLevelSystem:process(e)
             end
             if collision.normal.y ~= 0 then
                 e.aabb.onGround = collision.normal.y < 0
+                e.aabb.onCeiling = collision.normal.y > 0
 
                 e.velocity.y = 0
             end
