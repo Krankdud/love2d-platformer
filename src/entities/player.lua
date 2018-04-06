@@ -1,16 +1,17 @@
 local math = math
 
 local class = require "lib.middleclass"
-local log = require "lib.log"
+-- local log = require "lib.log"
 local lume = require "lib.lume"
 local Timer = require "lib.hump.timer"
 
-local buffer = require "src.util.buffer"
+local BufferCollection = require "src.util.buffercollection"
 local collision = require "src.util.collision"
 local input = require "src.input"
 local StateMachine = require "src.util.statemachine"
 
 local BONK_PENALTY = 0.3
+local WALLJUMP_SPEED = 4
 
 local Player = class("Player")
 function Player:initialize(x, y, collisionWorld)
@@ -26,16 +27,18 @@ function Player:initialize(x, y, collisionWorld)
 
     collisionWorld:add(self, self.position.x, self.position.y, self.aabb.width, self.aabb.height)
 
-    self.bufferJumpPressed = buffer(function()
+    self.buffers = BufferCollection:new()
+
+    self.buffers:add("jump", function()
         return input:pressed("jump")
     end, 8)
-    self.bufferOnGround = buffer(function()
+    self.buffers:add("onGround", function()
         return self.aabb.onGround
     end, 8)
-    self.bufferNearLeftWall = buffer(function()
+    self.buffers:add("nearLeftWall", function()
         return collision.isSolid(self.aabb.world, self, self.position.x - 4, self.position.y)
     end, 4)
-    self.bufferNearRightWall = buffer(function()
+    self.buffers:add("nearRightWall", function()
         return collision.isSolid(self.aabb.world, self, self.position.x + 4, self.position.y)
     end, 4)
 
@@ -65,6 +68,7 @@ function Player:initialize(x, y, collisionWorld)
 end
 
 function Player:update(dt)
+    self.buffers:updateAll(1)
     self.stateMachine:update(dt)
 end
 
@@ -98,17 +102,16 @@ function Player:defaultUpdate()
         end
     end
 
-    -- Handle buffers
-    local onGround = self.bufferOnGround(1)
-    local jumpPressed = self.bufferJumpPressed(1)
-    local nearLeftWall = self.bufferNearLeftWall(1)
-    local nearRightWall = self.bufferNearRightWall(1)
+    local onGround = self.buffers:get("onGround")
+    local jumpPressed = self.buffers:get("jump")
+    local nearLeftWall = self.buffers:get("nearLeftWall")
+    local nearRightWall = self.buffers:get("nearRightWall")
     -- Jumping
     if jumpPressed and onGround and self.velocity.y >= 0 then
         self.velocity.y = -6
         self.aabb.onGround = false
-        self.bufferJumpPressed(999)
-        self.bufferOnGround(999)
+        self.buffers:update("jump", 999)
+        self.buffers:update("onGround", 999)
     end
 
     -- Walljumping
@@ -119,8 +122,8 @@ function Player:defaultUpdate()
         elseif nearRightWall then
             direction = -1
         end
-        self.velocity.x = 2.5 * direction
-        self.bufferJumpPressed(999)
+        self.velocity.x = WALLJUMP_SPEED * direction
+        self.buffers:update("jump", 999)
         return "wallJump"
     end
 
@@ -139,7 +142,6 @@ function Player:defaultDraw()
 end
 
 function Player:defaultEnter()
-    log.debug("switching player state to default")
     self.acceleration.x = 0
     self.acceleration.y = 0.3
     self.minVelocity.x = -2.5
@@ -167,15 +169,15 @@ function Player:climbUpdate()
         return "default"
     end
 
-    if self.bufferJumpPressed(1) then
-        self.velocity.x = 2.5 * -self.climbDirection
-        self.bufferJumpPressed(999)
+    if self.buffers:get("jump") then
+        self.velocity.x = WALLJUMP_SPEED * -self.climbDirection
+        self.buffers:update("jump", 999)
         return "wallJump"
     end
 end
 
 function Player:climbEnter()
-    log.debug("switching player state to climb")
+    self:defaultEnter()
     self.acceleration.x = 0
     self.acceleration.y = -1
     self.velocity.y = 0
@@ -203,13 +205,9 @@ function Player:ceilingUpdate()
 end
 
 function Player:ceilingEnter()
-    log.debug("switching player state to ceiling")
+    self:defaultEnter()
     self.acceleration.x = self.ceilingDirection
     self.acceleration.y = 0
-    self.minVelocity.x = -2.5
-    self.minVelocity.y = -4000
-    self.maxVelocity.x = 2.5
-    self.maxVelocity.y = 8
 end
 
 function Player:wallJumpUpdate()
@@ -223,13 +221,8 @@ function Player:wallJumpUpdate()
 end
 
 function Player:wallJumpEnter()
-    log.debug("switching player state to walljump")
-    self.acceleration.x = 0
-    self.acceleration.y = 0.3
-    self.minVelocity.x = -2.5
-    self.minVelocity.y = -4000
-    self.maxVelocity.x = 2.5
-    self.maxVelocity.y = 8
+    self:defaultEnter()
+    self.maxVelocity.x = WALLJUMP_SPEED
 
     self.velocity.y = -6
 
@@ -241,13 +234,8 @@ function Player:wallJumpEnter()
 end
 
 function Player:ceilingHangEnter()
-    log.debug("switching player state to ceilingHang")
-    self.acceleration.x = 0
+    self:defaultEnter()
     self.acceleration.y = 0
-    self.minVelocity.x = -2.5
-    self.minVelocity.y = -4000
-    self.maxVelocity.x = 2.5
-    self.maxVelocity.y = 8
     self.velocity.y = 0
 
     Timer.after(0.2, function()
