@@ -34,7 +34,7 @@ function Player:initialize(x, y, collisionWorld)
     end, 8)
     self.buffers:add("onGround", function()
         return self.aabb.onGround
-    end, 8)
+    end, 6)
     self.buffers:add("nearLeftWall", function()
         return collision.isSolid(self.aabb.world, self, self.position.x - 4, self.position.y)
     end, 4)
@@ -62,9 +62,14 @@ function Player:initialize(x, y, collisionWorld)
     self.stateMachine:addState("ceilingHang", {
         enter = "ceilingHangEnter"
     })
+    self.stateMachine:addState("wallSlide", {
+        enter = "wallSlideEnter",
+        update = "wallSlideUpdate"
+    })
 
     self.climbDirection = 1
     self.canClimb = true
+    self.wallSlideDirection = 0
 end
 
 function Player:update(dt)
@@ -134,6 +139,11 @@ function Player:defaultUpdate()
     if self.aabb.onCeiling then
         return "ceilingHang"
     end
+
+    if self.velocity.y > 1 and collision.isSolid(self.aabb.world, self, self.position.x + moveX, self.position.y) then
+        self.wallSlideDirection = moveX
+        return "wallSlide"
+    end
 end
 
 function Player:defaultDraw()
@@ -161,12 +171,12 @@ function Player:climbUpdate()
         return "default"
     end
 
-    if collision.isSolid(self.aabb.world, self, self.position.x, self.position.y - 1) then
+    if self.aabb.onCeiling then
         self.canClimb = false
         Timer.after(BONK_PENALTY, function()
             self.canClimb = true
         end)
-        return "default"
+        return "ceilingHang"
     end
 
     if self.buffers:get("jump") then
@@ -238,11 +248,40 @@ function Player:ceilingHangEnter()
     self.acceleration.y = 0
     self.velocity.y = 0
 
-    Timer.after(0.2, function()
+    Timer.after(0.1, function()
         if self.stateMachine:getState() == "ceilingHang" then
             self.stateMachine:setState("default")
         end
     end)
+end
+
+function Player:wallSlideEnter()
+    self:defaultEnter()
+    self.maxVelocity.y = 2.5
+end
+
+function Player:wallSlideUpdate()
+    local moveX, moveY = input:get("movePair")
+
+    if self.buffers:get("jump") then
+        self.velocity.x = WALLJUMP_SPEED * -self.wallSlideDirection
+        self.buffers:update("jump", 999)
+        return "wallJump"
+    end
+
+    if moveX ~= self.wallSlideDirection then
+        return "default"
+    elseif moveY == -1 and self.canClimb then
+        return "climb"
+    end
+
+    if self.aabb.onGround then
+        return "default"
+    end
+
+    if not collision.isSolid(self.aabb.world, self, self.position.x + self.wallSlideDirection, self.position.y) then
+        return "default"
+    end
 end
 
 return Player
