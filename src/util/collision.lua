@@ -20,4 +20,17 @@ function Collision.isSolid(world, item, x, y)
     return len > 0
 end
 
+--- Defualt filter to use with bump for entities.
+-- Uses "slide" for the tilemap, and "cross" for everything else
+-- @param _ Unused
+-- @param other Entity that a collision occured with
+function Collision.defaultFilter(_, other)
+    -- Slide on the tilemap
+    if other.properties ~= nil then
+        return "slide"
+    end
+
+    return "cross"
+end
+
 return Collision

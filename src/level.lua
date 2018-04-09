@@ -24,7 +24,7 @@ function Level:initialize(path, world)
     local entities = self.map.layers["entities"]
     for _,object in ipairs(entities.objects) do
         if object.name == "player" then
-            local player = Player:new(object.x, object.y, self.collisionWorld)
+            local player = Player:new(object.x, object.y, world, self.collisionWorld)
             Camera:setFollow(player)
             world:addEntity(player)
         end

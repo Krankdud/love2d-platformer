@@ -88,6 +88,13 @@ function love.update(dt)
     input:update()
 end
 
+local errhand = love.errorhandler
+function love.errorhandler(msg)
+    log.fatal(debug.traceback(msg, 3):gsub("\n[^\n]+$", ""))
+
+    errhand(msg)
+end
+
 function love.exit()
     log.closeWriter()
     return false

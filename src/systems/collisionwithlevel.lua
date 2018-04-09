@@ -11,14 +11,21 @@ CollisionWithLevelSystem.filter = tiny.requireAll("velocity", "collideWithLevel"
 function CollisionWithLevelSystem:process(e)
     e.aabb.onGround = false
     e.aabb.onCeiling = false
+    e.aabb.onWall = false
+    e.aabb.onLevel = false
+
     for _,collision in ipairs(e.aabb.collisions) do
         if collision.other.properties ~= nil then
             if collision.normal.x ~= 0 then
+                e.aabb.onWall = true
+                e.aabb.onLevel = true
+
                 e.velocity.x = 0
             end
             if collision.normal.y ~= 0 then
                 e.aabb.onGround = collision.normal.y < 0
                 e.aabb.onCeiling = collision.normal.y > 0
+                e.aabb.onLevel = true
 
                 e.velocity.y = 0
             end

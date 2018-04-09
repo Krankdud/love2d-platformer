@@ -10,11 +10,15 @@ local collision = require "src.util.collision"
 local input = require "src.input"
 local StateMachine = require "src.util.statemachine"
 
+local PlayerBullet = require "src.entities.playerbullet"
+
 local BONK_PENALTY = 0.3
 local WALLJUMP_SPEED = 4
 
 local Player = class("Player")
-function Player:initialize(x, y, collisionWorld)
+function Player:initialize(x, y, world, collisionWorld)
+    self.world = world
+
     self.position = {x = x, y = y}
 
     self.aabb = {width = 16, height = 16, world = collisionWorld}
@@ -67,6 +71,7 @@ function Player:initialize(x, y, collisionWorld)
         update = "wallSlideUpdate"
     })
 
+    self.direction = "right"
     self.climbDirection = 1
     self.canClimb = true
     self.wallSlideDirection = 0
@@ -84,6 +89,7 @@ end
 function Player:defaultUpdate()
     local moveX, moveY = input:get("movePair")
     if moveX ~= 0 then
+        self.direction = moveX == 1 and "right" or "left"
         self.acceleration.x = moveX
     else
         local deaccel
@@ -128,6 +134,7 @@ function Player:defaultUpdate()
             direction = -1
         end
         self.velocity.x = WALLJUMP_SPEED * direction
+        self.direction = direction == 1 and "right" or "left"
         self.buffers:update("jump", 999)
         return "wallJump"
     end
@@ -136,12 +143,17 @@ function Player:defaultUpdate()
         self.velocity.y = self.velocity.y / 1.5
     end
 
+    if input:pressed("shoot") then
+        self:shoot()
+    end
+
     if self.aabb.onCeiling then
         return "ceilingHang"
     end
 
     if self.velocity.y > 1 and collision.isSolid(self.aabb.world, self, self.position.x + moveX, self.position.y) then
         self.wallSlideDirection = moveX
+        self.direction = -self.wallSlideDirection == 1 and "right" or "left"
         return "wallSlide"
     end
 end
@@ -163,11 +175,22 @@ end
 function Player:climbUpdate()
     local moveX, moveY = input:get("movePair")
 
+    if input:pressed("shoot") then
+        self:shoot()
+    end
+
     if moveX ~= self.climbDirection or moveY ~= -1 then
+        if moveX ~= 0 then
+            self.direction = moveX == 1 and "right" or "left"
+        else
+            self.direction = self.oldDirection
+        end
+
         return "default"
     end
 
     if not collision.isSolid(self.aabb.world, self, self.position.x + self.climbDirection, self.position.y) then
+        self.direction = self.oldDirection
         return "default"
     end
 
@@ -176,12 +199,14 @@ function Player:climbUpdate()
         Timer.after(BONK_PENALTY, function()
             self.canClimb = true
         end)
+        self.direction = self.oldDirection
         return "ceilingHang"
     end
 
     if self.buffers:get("jump") then
         self.velocity.x = WALLJUMP_SPEED * -self.climbDirection
         self.buffers:update("jump", 999)
+        self.direction = -self.climbDirection == 1 and "right" or "left"
         return "wallJump"
     end
 end
@@ -192,10 +217,17 @@ function Player:climbEnter()
     self.acceleration.y = -1
     self.velocity.y = 0
     self.minVelocity.y = -3
+
+    self.oldDirection = self.direction
+    self.direction = "up"
 end
 
 function Player:ceilingUpdate()
     local moveX, moveY = input:get("movePair")
+
+    if input:pressed("shoot") then
+        self:shoot()
+    end
 
     if moveX ~= self.ceilingDirection or moveY ~= -1 then
         return "default"
@@ -221,6 +253,15 @@ function Player:ceilingEnter()
 end
 
 function Player:wallJumpUpdate()
+    local moveX, _ = input:get("movePair")
+    if moveX ~= 0 then
+        self.direction = moveX == 1 and "right" or "left"
+    end
+
+    if input:pressed("shoot") then
+        self:shoot()
+    end
+
     if not input:down("jump") and self.velocity.y < 0 then
         self.velocity.y = self.velocity.y / 1.5
     end
@@ -263,6 +304,10 @@ end
 function Player:wallSlideUpdate()
     local moveX, moveY = input:get("movePair")
 
+    if input:pressed("shoot") then
+        self:shoot()
+    end
+
     if self.buffers:get("jump") then
         self.velocity.x = WALLJUMP_SPEED * -self.wallSlideDirection
         self.buffers:update("jump", 999)
@@ -282,6 +327,24 @@ function Player:wallSlideUpdate()
     if not collision.isSolid(self.aabb.world, self, self.position.x + self.wallSlideDirection, self.position.y) then
         return "default"
     end
+end
+
+function Player:shoot()
+    local x = self.position.x
+    local y = self.position.y
+
+    if self.direction == "right" then
+        x = x + self.aabb.width
+        y = y + 6
+    elseif self.direction == "left" then
+        x = x - 4
+        y = y + 6
+    elseif self.direction == "up" then
+        x = x + 6
+        y = y - 4
+    end
+
+    self.world:add(PlayerBullet:new(x, y, self.direction, self.velocity, self.world, self.aabb.world))
 end
 
 return Player
