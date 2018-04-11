@@ -1,8 +1,9 @@
 --- System that calls the draw function of entities.
 
+local class = require "lib.middleclass"
 local tiny = require "lib.tiny"
 
-local DrawSystem = tiny.processingSystem()
+local DrawSystem = tiny.processingSystem(class("DrawSystem"))
 DrawSystem.isDrawSystem = true
 DrawSystem.filter = tiny.requireAll("draw")
 

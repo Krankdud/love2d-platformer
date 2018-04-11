@@ -25,7 +25,7 @@ local LevelState = class("LevelState", State)
 function LevelState:initialize()
     State.initialize(self,
         TimerSystem,
-        UpdateSystem,
+        UpdateSystem:new(),
         IntegrateAxisSystem:new("x", "velocity", "acceleration"),
         IntegrateAxisSystem:new("y", "velocity", "acceleration"),
         LimitVelocitySystem,
@@ -40,18 +40,12 @@ function LevelState:initialize()
         CameraUpdateSystem,
 
         CameraStartSystem,
-        DrawSystem,
+        DrawSystem:new(),
         CameraFinishSystem
     )
 
     Camera:new()
     self.world:addEntity(Level:new("assets/levels/test.lua", self.world))
-end
-
-function LevelState:leave()
-    self.world:clearSystems()
-    self.world:clearEntities()
-    self.world:refresh()
 end
 
 function LevelState:update(dt)

@@ -23,6 +23,16 @@ function State:initialize(...)
     self.world = tiny.world(...)
 end
 
+--- Called when leaving the state.
+-- Clears the systems and entities from the state's world.
+function State:leave()
+    --[[
+    self.world:clearSystems()
+    self.world:clearEntities()
+    self.world:refresh()
+    ]]
+end
+
 --- Updates the state
 -- @param dt Delta time
 function State:update(dt)

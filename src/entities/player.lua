@@ -7,7 +7,7 @@ local Timer = require "lib.hump.timer"
 
 local BufferCollection = require "src.util.buffercollection"
 local collision = require "src.util.collision"
-local input = require "src.input"
+local input = require "src.input.player"
 local StateMachine = require "src.util.statemachine"
 
 local PlayerBullet = require "src.entities.playerbullet"

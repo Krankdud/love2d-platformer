@@ -13,10 +13,12 @@ assets = require("lib.cargo").init({
 })
 
 local graphs = require "src.graphs"
-local input = require "src.input"
+local menuInput = require "src.input.menu"
+local playerInput = require "src.input.player"
 local screenScaler = require "src.screenscaler"
 
-local LevelState = require "src.states.levelstate"
+local MenuState = require "src.states.mainmenu"
+local LevelState = require "src.states.level"
 
 function love.load()
     log.usecolor = false
@@ -29,7 +31,7 @@ function love.load()
     screenScaler:init(320, 240)
 
     gamestate.registerEvents()
-    gamestate.switch(LevelState:new())
+    gamestate.switch(MenuState:new())
 end
 
 function love.run()
@@ -85,7 +87,8 @@ function love.update(dt)
     lurker.update()
 
     graphs:update(dt)
-    input:update()
+    menuInput:update()
+    playerInput:update()
 end
 
 local errhand = love.errorhandler
