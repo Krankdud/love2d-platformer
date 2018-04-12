@@ -19,6 +19,7 @@ function ScreenScaler:init(width, height, keepAspectRatio)
 
     self.width = width
     self.height = height
+    self.keepAspectRatio = keepAspectRatio
 
     self.scale = {x = love.graphics.getWidth() / self.width, y = love.graphics.getHeight() / self.height}
 
@@ -37,6 +38,12 @@ function ScreenScaler:init(width, height, keepAspectRatio)
 
     self.canvas = love.graphics.newCanvas(width, height)
     self.canvas:setFilter("nearest", "nearest", 1)
+end
+
+--- Reinitialize the screen scaler with the previous settings.
+-- Useful for when the window resolution is changed.
+function ScreenScaler:reinit()
+    self:init(self.width, self.height, self.keepAspectRatio)
 end
 
 --- Call before making any draw calls that you want to be scaled.

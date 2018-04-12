@@ -3,6 +3,7 @@ local lume = require "lib.lume"
 
 local playerInput = require "src.input.player"
 local menuInput = require "src.input.menu"
+local screenScaler = require "src.screenscaler"
 
 local table = table
 
@@ -40,6 +41,14 @@ function Menu:update()
         self:back()
     end
 
+    if currentItem.left and (playerInput:pressed("left") or menuInput:pressed("left")) then
+        currentItem:left()
+    end
+
+    if currentItem.right and (playerInput:pressed("right") or menuInput:pressed("right")) then
+        currentItem:right()
+    end
+
     if playerInput:pressed("up") or menuInput:pressed("up") then
         self.index = self.index - 1
         if self.index == 0 then
@@ -57,20 +66,29 @@ end
 
 function Menu:draw()
     local font = assets.fonts.monogram(16)
+    local y = self.y
 
     love.graphics.setFont(font)
     for i = 1, #self.items do
         local item = self.items[i]
-        local selector = " "
-        if i == self.index then
-            selector = ">"
+
+        if item.draw then
+            y = item:draw(i == self.index)
+        else
+            if i == self.index then
+                love.graphics.setColor(1.0, 1.0, 1.0)
+            else
+                love.graphics.setColor(0.5, 0.5, 0.5)
+            end
+            love.graphics.printf(item.title, self.x, y, screenScaler.width, "center")
+            y = y + font:getHeight()
         end
-        love.graphics.print(selector .. item.title, self.x, self.y + font:getHeight() * (i - 1))
     end
 
     local currentItem = self.items[self.index]
     if currentItem.caption then
-        love.graphics.print(currentItem.caption, 0, 240 - font:getHeight())
+        love.graphics.setColor(1.0, 1.0, 1.0)
+        love.graphics.printf(currentItem.caption, 0, screenScaler.height - font:getHeight(), screenScaler.width, "center")
     end
 end
 

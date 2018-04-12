@@ -44,6 +44,9 @@ function MainMenuState:initialize()
                 love.event.quit()
             end
         }
+    },
+    {
+        y = 140
     })
 
     self.world:addEntity(self.menu)
