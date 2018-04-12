@@ -24,7 +24,7 @@ local LevelState = class("LevelState", State)
 --- Initializes the state and loads a level
 function LevelState:initialize()
     State.initialize(self,
-        TimerSystem,
+        TimerSystem:new(),
         UpdateSystem:new(),
         IntegrateAxisSystem:new("x", "velocity", "acceleration"),
         IntegrateAxisSystem:new("y", "velocity", "acceleration"),

@@ -15,4 +15,13 @@ local input = baton.new({
     squareDeadzone = true
 })
 
+input.config.defaults = {
+    left = {"key:left"},
+    right = {"key:right"},
+    up = {"key:up"},
+    down = {"key:down"},
+    jump = {"key:z"},
+    shoot = {"key:x"}
+}
+
 return input

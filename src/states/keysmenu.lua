@@ -3,59 +3,41 @@ local gamestate = require "lib.hump.gamestate"
 
 -- Systems
 local DrawSystem   = require "src.systems.draw"
+local TimerSystem  = require "src.systems.timer"
 local UpdateSystem = require "src.systems.update"
 
+local BindKeyItem = require "src.menu.bindkeyitem"
 local Menu = require "src.menu"
+local PlayerInput = require "src.input.player"
 local State = require "src.states.state"
 
 local KeysMenuState = class("OptioneMenuState", State)
 function KeysMenuState:initialize()
     State.initialize(self,
+        TimerSystem:new(),
         UpdateSystem:new(),
         DrawSystem:new()
     )
 
     self.menu = Menu:new({
-        {
-            title = "Left",
-            caption = "Press [Enter] to change the key binding",
-            confirm = function()
-            end
-        },
-        {
-            title = "Right",
-            caption = "Press [Enter] to change the key binding",
-            confirm = function()
-            end
-        },
-        {
-            title = "Up",
-            caption = "Press [Enter] to change the key binding",
-            confirm = function()
-            end
-        },
-        {
-            title = "Down",
-            caption = "Press [Enter] to change the key binding",
-            confirm = function()
-            end
-        },
-        {
-            title = "Jump",
-            caption = "Press [Enter] to change the key binding",
-            confirm = function()
-            end
-        },
-        {
-            title = "Shoot",
-            caption = "Press [Enter] to change the key binding",
-            confirm = function()
-            end
-        },
+        BindKeyItem:new("Left", PlayerInput.config.controls.left),
+        BindKeyItem:new("Right", PlayerInput.config.controls.right),
+        BindKeyItem:new("Up", PlayerInput.config.controls.up),
+        BindKeyItem:new("Down", PlayerInput.config.controls.down),
+        BindKeyItem:new("Jump", PlayerInput.config.controls.jump),
+        BindKeyItem:new("Shoot", PlayerInput.config.controls.shoot),
         {
             title = "Restore Defaults",
             caption = "Restore the default controls",
             confirm = function()
+                PlayerInput.config.controls.left[1] = PlayerInput.config.defaults.left[1]
+                PlayerInput.config.controls.right[1] = PlayerInput.config.defaults.right[1]
+                PlayerInput.config.controls.up[1] = PlayerInput.config.defaults.up[1]
+                PlayerInput.config.controls.down[1] = PlayerInput.config.defaults.down[1]
+                PlayerInput.config.controls.jump[1] = PlayerInput.config.defaults.jump[1]
+                PlayerInput.config.controls.shoot[1] = PlayerInput.config.defaults.shoot[1]
+
+                gamestate.switch(KeysMenuState:new())
             end
         },
         {
@@ -67,6 +49,8 @@ function KeysMenuState:initialize()
         }
     },
     {
+        y = 60,
+
         back = function()
             gamestate.pop()
         end
