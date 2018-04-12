@@ -63,8 +63,9 @@ function debugGraph:new(type, x, y, width, height, delay, label, font)
       if val == nil then
         if self._type == 'fps' then
           -- Collect fps info and update the label
-          val = 0.75 * 1 / dt + 0.25 * love.timer.getFPS()
-          self.label = "FPS: " .. math.floor(val * 10) / 10
+          --val = 0.75 * 1 / dt + 0.25 * love.timer.getFPS()
+          val = love.timer.getFPS()
+          self.label = "FPS: " .. val
         elseif self._type == 'mem' then
           -- Collect memory info and update the label
           val = collectgarbage('count')

@@ -12,6 +12,7 @@ assets = require("lib.cargo").init({
     }
 })
 
+local config = require "src.config"
 local graphs = require "src.graphs"
 local menuInput = require "src.input.menu"
 local playerInput = require "src.input.player"
@@ -44,6 +45,8 @@ function love.run()
     local accum = 0
     local rate = 1 / 60
 
+    local nextTime = love.timer.getTime()
+
     -- Main loop time.
     return function()
         -- Update dt, as we'll be passing it to update
@@ -68,6 +71,16 @@ function love.run()
 
             -- Call update and draw
             if love.update then love.update(rate) end
+        end
+
+        if config.framerate > 0 and not config.resolution.vsync then
+            nextTime = nextTime + 1 / config.framerate
+            local curTime = love.timer.getTime()
+            if nextTime < curTime then
+                nextTime = curTime
+            else
+                love.timer.sleep(nextTime - curTime)
+            end
         end
 
         if love.graphics and love.graphics.isActive() then

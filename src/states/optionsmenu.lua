@@ -1,3 +1,5 @@
+local math = math
+
 local class = require "lib.middleclass"
 local gamestate = require "lib.hump.gamestate"
 
@@ -11,6 +13,15 @@ local Menu = require "src.menu"
 local ScreenScaler = require "src.screenscaler"
 local State = require "src.states.state"
 
+local framerates = {
+    60,
+    120,
+    144,
+    240,
+    -1
+}
+local currentFramerate = 1
+
 local OptionsMenuState = class("OptioneMenuState", State)
 function OptionsMenuState:initialize()
     State.initialize(self,
@@ -19,13 +30,25 @@ function OptionsMenuState:initialize()
     )
 
     local resolution = config.resolution:get()
+
     local fullscreen = "Off"
     if config.resolution.fullscreen then
         fullscreen = "On"
     end
+
     local vsync = "Off"
     if config.resolution.vsync then
         vsync = "On"
+    end
+
+    local framerate = "" .. config.framerate
+    if config.framerate == -1 then
+        framerate = "Unlimited"
+    end
+    for i,v in ipairs(framerates) do
+        if v == config.framerate then
+            currentFramerate = i
+        end
     end
 
     self.menu = Menu:new({
@@ -77,6 +100,24 @@ function OptionsMenuState:initialize()
                 config.resolution:reset()
                 ScreenScaler:reinit()
                 item.title = "Vsync: " .. text
+            end
+        },
+        {
+            title = "Framerate: " .. framerate,
+            caption = "Press [Left] or [Right] to adjust the framerate",
+            left = function(item)
+                currentFramerate = math.max(1, currentFramerate - 1)
+                config.framerate = framerates[currentFramerate]
+                item.title = "Framerate: " .. config.framerate
+            end,
+            right = function(item)
+                currentFramerate = math.min(#framerates, currentFramerate + 1)
+                config.framerate = framerates[currentFramerate]
+                if config.framerate > 0 then
+                    item.title = "Framerate: " .. config.framerate
+                else
+                    item.title = "Framerate: Unlimited"
+                end
             end
         },
         {
