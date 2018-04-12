@@ -8,7 +8,6 @@ local UpdateSystem = require "src.systems.update"
 local config = require "src.config"
 local KeysMenuState = require "src.states.keysmenu"
 local Menu = require "src.menu"
-local Resolution = require "src.config.resolution"
 local ScreenScaler = require "src.screenscaler"
 local State = require "src.states.state"
 
@@ -19,32 +18,65 @@ function OptionsMenuState:initialize()
         DrawSystem:new()
     )
 
-    local resolution = Resolution:get()
+    local resolution = config.resolution:get()
+    local fullscreen = "Off"
+    if config.resolution.fullscreen then
+        fullscreen = "On"
+    end
+    local vsync = "Off"
+    if config.resolution.vsync then
+        vsync = "On"
+    end
+
     self.menu = Menu:new({
         {
-            title = "Resolution: " .. resolution.width .. "x" .. resolution.height,
+            title = "Windowed Resolution: " .. resolution.width .. "x" .. resolution.height,
             caption = "Press [Left] or [Right] to change the resolution",
             left = function(item)
-                if Resolution:decrease() then
+                if config.resolution:decrease() then
                     ScreenScaler:reinit()
 
-                    local res = Resolution:get()
-                    item.title = "Resolution: " .. res.width .. "x" .. res.height
+                    local res = config.resolution:get()
+                    item.title = "Windowed Resolution: " .. res.width .. "x" .. res.height
                 end
             end,
             right = function(item)
-                if Resolution:increase() then
+                if config.resolution:increase() then
                     ScreenScaler:reinit()
 
-                    local res = Resolution:get()
-                    item.title = "Resolution: " .. res.width .. "x" .. res.height
+                    local res = config.resolution:get()
+                    item.title = "Windowed Resolution: " .. res.width .. "x" .. res.height
                 end
             end
         },
         {
-            title = "Fullscreen: Off",
+            title = "Fullscreen: " .. fullscreen,
             caption = "Toggle fullscreen mode",
-            confirm = function()
+            confirm = function(item)
+                config.resolution.fullscreen = not config.resolution.fullscreen
+                local text = "Off"
+                if config.resolution.fullscreen then
+                    text = "On"
+                end
+
+                config.resolution:reset()
+                ScreenScaler:reinit()
+                item.title = "Fullscreen: " .. text
+            end
+        },
+        {
+            title = "Vsync: " .. vsync,
+            caption = "Toggle vsync",
+            confirm = function(item)
+                config.resolution.vsync = not config.resolution.vsync
+                local text = "Off"
+                if config.resolution.vsync then
+                    text = "On"
+                end
+
+                config.resolution:reset()
+                ScreenScaler:reinit()
+                item.title = "Vsync: " .. text
             end
         },
         {

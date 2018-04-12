@@ -37,6 +37,8 @@ local Resolution = {
 }
 
 Resolution.currentResolution = 2
+Resolution.fullscreen = false
+Resolution.vsync = false
 
 --- Increases the window resolution.
 -- @return True if resolution changed.
@@ -54,16 +56,28 @@ end
 
 --- Sets the window resolution.
 -- @param res Index into the table of resolutions
+-- @param force Forces the resolution to change
 -- @return True if resolution changed.
-function Resolution:set(res)
+function Resolution:set(res, force)
     assert(res >= 1, "Invalid resolution")
     assert(res <= #self, "Invalid resolution")
-    if res ~= self.currentResolution then
-        love.window.setMode(self[res].width, self[res].height, { vsync = false })
+    if res ~= self.currentResolution or force then
+        love.window.setMode(self[res].width, self[res].height, {
+            vsync = self.vsync,
+            fullscreen = self.fullscreen,
+            fullscreentype = "desktop"
+        })
         self.currentResolution = res
         return true
     end
     return false
+end
+
+--- Forcefully resizes the window to the current resolution.
+-- Useful when fullscreen or vsync has changed.
+-- @return True if resolution changed
+function Resolution:reset()
+    return self:set(self.currentResolution, true)
 end
 
 --- Returns the current resolution.
