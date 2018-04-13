@@ -1,10 +1,11 @@
 --- System that handles collision detection.
 -- Requires entities to have "position" and "aabb" components.
 
+local class = require "lib.middleclass"
 local tiny = require "lib.tiny"
 local Collision = require "src.util.collision"
 
-local CollisionDetectionSystem = tiny.processingSystem()
+local CollisionDetectionSystem = tiny.processingSystem(class("CollisionDetectionSystem"))
 CollisionDetectionSystem.filter = tiny.requireAll("position", "aabb")
 
 --- Detects collisions using bump

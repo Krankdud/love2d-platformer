@@ -29,20 +29,20 @@ function LevelState:initialize()
         UpdateSystem:new(),
         IntegrateAxisSystem:new("x", "velocity", "acceleration"),
         IntegrateAxisSystem:new("y", "velocity", "acceleration"),
-        LimitVelocitySystem,
+        LimitVelocitySystem:new(),
 
         IntegrateAxisSystem:new("x", "position", "velocity"),
         IntegrateAxisSystem:new("y", "position", "velocity"),
 
-        CollisionDetectionSystem,
-        CollisionWithLevelSystem,
-        CollisionResolutionSystem,
+        CollisionDetectionSystem:new(),
+        CollisionWithLevelSystem:new(),
+        CollisionResolutionSystem:new(),
 
-        CameraUpdateSystem,
+        CameraUpdateSystem:new(),
 
-        CameraStartSystem,
+        CameraStartSystem:new(),
         DrawSystem:new(),
-        CameraFinishSystem
+        CameraFinishSystem:new()
     )
 
     Camera:new()

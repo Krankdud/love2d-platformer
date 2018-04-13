@@ -1,11 +1,12 @@
 --- System that limits velocity.
 -- Requires entities to have a "velocity" component and either a "minVelocity" or a "maxVelocity" component.
 
+local class = require "lib.middleclass"
 local tiny = require "lib.tiny"
 
 local math = math
 
-local LimitVelocitySystem = tiny.processingSystem()
+local LimitVelocitySystem = tiny.processingSystem(class("LimitVelocitySystem"))
 LimitVelocitySystem.filter = tiny.filter("velocity&(minVelocity|maxVelocity)")
 
 --- Limits the velocity of entities.

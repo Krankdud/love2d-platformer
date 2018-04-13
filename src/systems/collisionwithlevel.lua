@@ -1,9 +1,10 @@
 --- System that resolves collision with the level.
 -- Requires entities to have "aabb", "collideWithLevel", and "velocity" components.
 
+local class = require "lib.middleclass"
 local tiny = require "lib.tiny"
 
-local CollisionWithLevelSystem = tiny.processingSystem()
+local CollisionWithLevelSystem = tiny.processingSystem(class("CollisionWithLevelSystem"))
 CollisionWithLevelSystem.filter = tiny.requireAll("velocity", "collideWithLevel", "aabb")
 
 --- Resolves collision between entity and level by setting the velocity to 0.
