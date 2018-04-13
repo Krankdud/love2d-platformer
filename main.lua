@@ -1,4 +1,3 @@
-require "lib.autobatch"
 local gamestate = require "lib.hump.gamestate"
 local log = require "lib.log"
 local lurker = require "lib.lurker"
@@ -27,6 +26,11 @@ function love.load()
     log.createWriter()
 
     lurker.path = "src"
+
+    config.load()
+    config.resolution:reset()
+
+    require "lib.autobatch"
 
     graphs:init()
     screenScaler:init(320, 240)

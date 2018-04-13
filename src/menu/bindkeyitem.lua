@@ -3,6 +3,8 @@
 local class = require "lib.middleclass"
 local Timer = require "lib.hump.timer"
 
+local config = require "src.config"
+
 local BindKeyItem = class("BindKeyItem")
 --- Create a BindKeyItem.
 -- @param name Name of the control
@@ -89,6 +91,7 @@ function BindKeyItem:setControl(control)
     self.control[1] = control
     self.title = self.name .. " - " .. self.control[1]
     self.caption = "Press [Enter] to change the key binding"
+    config.save()
 
     -- Add a delay before giving control back to the menu,
     -- otherwise an action will fire on the menu as well

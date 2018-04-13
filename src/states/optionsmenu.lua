@@ -58,6 +58,7 @@ function OptionsMenuState:initialize()
             left = function(item)
                 if config.resolution:decrease() then
                     ScreenScaler:reinit()
+                    config.save()
 
                     local res = config.resolution:get()
                     item.title = "Windowed Resolution: " .. res.width .. "x" .. res.height
@@ -66,6 +67,7 @@ function OptionsMenuState:initialize()
             right = function(item)
                 if config.resolution:increase() then
                     ScreenScaler:reinit()
+                    config.save()
 
                     local res = config.resolution:get()
                     item.title = "Windowed Resolution: " .. res.width .. "x" .. res.height
@@ -84,6 +86,7 @@ function OptionsMenuState:initialize()
 
                 config.resolution:reset()
                 ScreenScaler:reinit()
+                config.save()
                 item.title = "Fullscreen: " .. text
             end
         },
@@ -99,6 +102,7 @@ function OptionsMenuState:initialize()
 
                 config.resolution:reset()
                 ScreenScaler:reinit()
+                config.save()
                 item.title = "Vsync: " .. text
             end
         },
@@ -108,11 +112,13 @@ function OptionsMenuState:initialize()
             left = function(item)
                 currentFramerate = math.max(1, currentFramerate - 1)
                 config.framerate = framerates[currentFramerate]
+                config.save()
                 item.title = "Framerate: " .. config.framerate
             end,
             right = function(item)
                 currentFramerate = math.min(#framerates, currentFramerate + 1)
                 config.framerate = framerates[currentFramerate]
+                config.save()
                 if config.framerate > 0 then
                     item.title = "Framerate: " .. config.framerate
                 else
@@ -125,10 +131,12 @@ function OptionsMenuState:initialize()
             caption = "Press [Left] or [Right] to adjust the sound volume",
             left = function(item)
                 config.soundVolume = math.max(0, config.soundVolume - 10)
+                config.save()
                 item.title = "Sound Volume: " .. config.soundVolume .. "%"
             end,
             right = function(item)
                 config.soundVolume = math.min(100, config.soundVolume + 10)
+                config.save()
                 item.title = "Sound Volume: " .. config.soundVolume .. "%"
             end
         },
@@ -137,10 +145,12 @@ function OptionsMenuState:initialize()
             caption = "Press [Left] or [Right] to adjust the music volume",
             left = function(item)
                 config.musicVolume = math.max(0, config.musicVolume - 10)
+                config.save()
                 item.title = "Music Volume: " .. config.musicVolume .. "%"
             end,
             right = function(item)
                 config.musicVolume = math.min(100, config.musicVolume + 10)
+                config.save()
                 item.title = "Music Volume: " .. config.musicVolume .. "%"
             end
         },
