@@ -19,6 +19,7 @@ local UpdateSystem              = require "src.systems.update"
 
 local Camera = require "src.camera"
 local Level = require "src.level"
+local PlayerInput = require "src.input.player"
 
 local LevelState = class("LevelState", State)
 --- Initializes the state and loads a level
@@ -50,6 +51,10 @@ end
 
 function LevelState:update(dt)
     State.update(self, dt)
+
+    if PlayerInput:pressed("pause") then
+        gamestate.push(self.factory.create("PauseMenu"))
+    end
 
     if love.keyboard.isScancodeDown("f5") then
         self.world:clearSystems()

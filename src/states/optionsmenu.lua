@@ -8,7 +8,6 @@ local DrawSystem   = require "src.systems.draw"
 local UpdateSystem = require "src.systems.update"
 
 local config = require "src.config"
-local KeysMenuState = require "src.states.keysmenu"
 local Menu = require "src.menu"
 local ScreenScaler = require "src.screenscaler"
 local State = require "src.states.state"
@@ -158,7 +157,7 @@ function OptionsMenuState:initialize()
             title = "Key Bindings",
             caption = "Customize your controls",
             confirm = function()
-                gamestate.push(KeysMenuState:new())
+                gamestate.push(self.factory.create("KeysMenu"))
             end
         },
         {

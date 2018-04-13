@@ -7,7 +7,7 @@ local input = baton.new({
         up = {"key:up"},
         down = {"key:down"},
         confirm = {"key:return"},
-        back = {"key:escape"}
+        back = {"key:escape"},
     },
     squareDeadzone = true
 })

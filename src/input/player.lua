@@ -7,7 +7,8 @@ local input = baton.new({
         up = {"key:up"},
         down = {"key:down"},
         jump = {"key:z"},
-        shoot = {"key:x"}
+        shoot = {"key:x"},
+        pause = {"key:escape"}
     },
     pairs = {
         movePair = {"left", "right", "up", "down"}
@@ -23,7 +24,8 @@ input.config.defaults = {
     up = {"key:up"},
     down = {"key:down"},
     jump = {"key:z"},
-    shoot = {"key:x"}
+    shoot = {"key:x"},
+    pause = {"key:escape"}
 }
 
 return input

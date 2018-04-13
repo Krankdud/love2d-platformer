@@ -17,8 +17,7 @@ local menuInput = require "src.input.menu"
 local playerInput = require "src.input.player"
 local screenScaler = require "src.screenscaler"
 
-local MenuState = require "src.states.mainmenu"
-local LevelState = require "src.states.level"
+local StateFactory = require "src.statefactory"
 
 function love.load()
     log.usecolor = false
@@ -36,7 +35,7 @@ function love.load()
     screenScaler:init(320, 240)
 
     gamestate.registerEvents()
-    gamestate.switch(MenuState:new())
+    gamestate.switch(StateFactory.create("MainMenu"))
 end
 
 function love.run()

@@ -8,8 +8,10 @@ local State = require "src.states.state"
 local DrawSystem   = require "src.systems.draw"
 local UpdateSystem = require "src.systems.update"
 
-local MainMenuState = class("MainMenuState", State)
-function MainMenuState:initialize()
+local PlayerInput = require "src.input.player"
+
+local PauseMenuState = class("PauseMenuState", State)
+function PauseMenuState:initialize()
     State.initialize(self,
         UpdateSystem:new(),
         DrawSystem:new()
@@ -17,15 +19,11 @@ function MainMenuState:initialize()
 
     self.menu = Menu:new({
         {
-            title = "New Game",
-            caption = "Start a new game",
+            title = "Resume",
+            caption = "Resume the game",
             confirm = function()
-                gamestate.switch(self.factory.create("Level"))
+                gamestate.pop()
             end
-        },
-        {
-            title = "Continue",
-            caption = "Continue your previous game"
         },
         {
             title = "Options",
@@ -35,7 +33,16 @@ function MainMenuState:initialize()
             end
         },
         {
-            title = "Exit",
+            title = "Main menu",
+            caption = "Return to the main menu",
+            confirm = function()
+                -- Pop to go back to the level state, then switch to get rid of the level state
+                gamestate.pop()
+                gamestate.switch(self.factory.create("MainMenu"))
+            end
+        },
+        {
+            title = "Exit game",
             caption = "Exit the game",
             confirm = function()
                 love.event.quit()
@@ -43,10 +50,18 @@ function MainMenuState:initialize()
         }
     },
     {
-        y = 140
+        y = 100
     })
 
     self.world:addEntity(self.menu)
 end
 
-return MainMenuState
+function PauseMenuState:update(dt)
+    State.update(self, dt)
+
+    if PlayerInput:pressed("pause") then
+        gamestate.pop()
+    end
+end
+
+return PauseMenuState

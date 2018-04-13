@@ -26,6 +26,7 @@ function KeysMenuState:initialize()
         BindKeyItem:new("Down", PlayerInput.config.controls.down, PlayerInput.config.joystick),
         BindKeyItem:new("Jump", PlayerInput.config.controls.jump, PlayerInput.config.joystick),
         BindKeyItem:new("Shoot", PlayerInput.config.controls.shoot, PlayerInput.config.joystick),
+        BindKeyItem:new("Pause", PlayerInput.config.controls.pause, PlayerInput.config.joystick),
         {
             title = "Restore Defaults",
             caption = "Restore the default controls",
@@ -36,6 +37,7 @@ function KeysMenuState:initialize()
                 PlayerInput.config.controls.down[1] = PlayerInput.config.defaults.down[1]
                 PlayerInput.config.controls.jump[1] = PlayerInput.config.defaults.jump[1]
                 PlayerInput.config.controls.shoot[1] = PlayerInput.config.defaults.shoot[1]
+                PlayerInput.config.controls.pause[1] = PlayerInput.config.defaults.pause[1]
 
                 gamestate.switch(KeysMenuState:new())
             end
