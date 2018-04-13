@@ -12,7 +12,9 @@ local input = baton.new({
     pairs = {
         movePair = {"left", "right", "up", "down"}
     },
-    squareDeadzone = true
+    squareDeadzone = true,
+    deadzone = 0.5,
+    joystick = love.joystick.getJoysticks()[1]
 })
 
 input.config.defaults = {

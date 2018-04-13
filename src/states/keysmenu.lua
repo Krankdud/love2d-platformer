@@ -20,12 +20,12 @@ function KeysMenuState:initialize()
     )
 
     self.menu = Menu:new({
-        BindKeyItem:new("Left", PlayerInput.config.controls.left),
-        BindKeyItem:new("Right", PlayerInput.config.controls.right),
-        BindKeyItem:new("Up", PlayerInput.config.controls.up),
-        BindKeyItem:new("Down", PlayerInput.config.controls.down),
-        BindKeyItem:new("Jump", PlayerInput.config.controls.jump),
-        BindKeyItem:new("Shoot", PlayerInput.config.controls.shoot),
+        BindKeyItem:new("Left", PlayerInput.config.controls.left, PlayerInput.config.joystick),
+        BindKeyItem:new("Right", PlayerInput.config.controls.right, PlayerInput.config.joystick),
+        BindKeyItem:new("Up", PlayerInput.config.controls.up, PlayerInput.config.joystick),
+        BindKeyItem:new("Down", PlayerInput.config.controls.down, PlayerInput.config.joystick),
+        BindKeyItem:new("Jump", PlayerInput.config.controls.jump, PlayerInput.config.joystick),
+        BindKeyItem:new("Shoot", PlayerInput.config.controls.shoot, PlayerInput.config.joystick),
         {
             title = "Restore Defaults",
             caption = "Restore the default controls",
