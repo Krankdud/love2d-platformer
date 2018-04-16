@@ -21,12 +21,22 @@ function MainMenuState:initialize()
             title = "New Game",
             caption = "Start a new game",
             confirm = function()
-                gamestate.switch(self.factory.create("LevelIntro", Game:new()))
+                local game = Game:new()
+                game:save()
+                gamestate.switch(self.factory.create("LevelIntro", game))
             end
         },
         {
             title = "Continue",
-            caption = "Continue your previous game"
+            caption = "Continue your previous game",
+            confirm = function()
+                local info = love.filesystem.getInfo("save.dat")
+                if info then
+                    local game = Game:new()
+                    game:load()
+                    gamestate.switch(self.factory.create("LevelIntro", game))
+                end
+            end
         },
         {
             title = "Options",

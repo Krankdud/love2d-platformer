@@ -1,5 +1,6 @@
 --- Stores data about the current game session.
 
+local bitser = require "lib.bitser"
 local class = require "lib.middleclass"
 
 local Game = class("Game")
@@ -9,10 +10,18 @@ end
 
 --- Saves the game.
 function Game:save()
+    local data = {
+        level = self.level
+    }
+
+    bitser.dumpLoveFile("save.dat", data)
 end
 
 --- Loads the game.
 function Game:load()
+    local data = bitser.loadLoveFile("save.dat")
+
+    self.level = data.level
 end
 
 --- Returns the filename of the current level without the extension.
