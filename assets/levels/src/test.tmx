@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
+ <properties>
+  <property name="title" value="A Test Level"/>
+ </properties>
  <tileset firstgid="1" name="grid" tilewidth="16" tileheight="16" tilecount="1" columns="1">
   <image source="../graphics/grid.png" width="16" height="16"/>
  </tileset>

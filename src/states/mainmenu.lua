@@ -1,6 +1,7 @@
 local class = require "lib.middleclass"
 local gamestate = require "lib.hump.gamestate"
 
+local Game = require "src.game"
 local Menu = require "src.menu"
 local State = require "src.states.state"
 
@@ -20,7 +21,7 @@ function MainMenuState:initialize()
             title = "New Game",
             caption = "Start a new game",
             confirm = function()
-                gamestate.switch(self.factory.create("Level"))
+                gamestate.switch(self.factory.create("LevelIntro", Game:new()))
             end
         },
         {

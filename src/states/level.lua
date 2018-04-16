@@ -23,7 +23,8 @@ local PlayerInput = require "src.input.player"
 
 local LevelState = class("LevelState", State)
 --- Initializes the state and loads a level
-function LevelState:initialize()
+-- @param game Game object to get the current level from
+function LevelState:initialize(game)
     State.initialize(self,
         TimerSystem:new(),
         UpdateSystem:new(),
@@ -46,7 +47,7 @@ function LevelState:initialize()
     )
 
     Camera:new()
-    self.world:addEntity(Level:new("assets/levels/test.lua", self.world))
+    self.world:addEntity(Level:new("assets/levels/" .. game:getCurrentLevel() .. ".lua", self.world))
 end
 
 function LevelState:update(dt)

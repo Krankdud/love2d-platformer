@@ -9,7 +9,9 @@ return {
   tilewidth = 16,
   tileheight = 16,
   nextobjectid = 2,
-  properties = {},
+  properties = {
+    ["title"] = "A Test Level"
+  },
   tilesets = {
     {
       name = "grid",
