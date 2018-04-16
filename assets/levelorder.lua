@@ -1,3 +1,4 @@
 return {
-    "test"
+    "test",
+    "test2"
 }

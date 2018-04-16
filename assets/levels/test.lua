@@ -8,7 +8,7 @@ return {
   height = 50,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 6,
   properties = {
     ["title"] = "A Test Level"
   },
@@ -55,7 +55,7 @@ return {
       },
       encoding = "base64",
       compression = "zlib",
-      data = "eJzt2EkKwzAQRUH5/pfO3gZZnjqfpgqyEQIND+wk2xhjK/7sXR3vrLqFHnOVZ96vddZLj9q19Dj6Z4+353egR5aqM5+905/O7yKhx2xMj2/X0WNu5S5Wf0esrKPHXMJ5E/aQIuEuEvaQIuEuEvaQ4u3/pu489+/M7dpPj/70yKJHFj2y6JFFjyxff2fTAwAAAAAAAAAAAACgnx8mUwEn"
+      data = "eJzt2NsKwjAURcH0/3/a9wppWpvj5jADvoRALgta9RhjHMWfs7vjnVW30GOu8sznta566VG7lh7f/tnj7fkd6JGl6sxX7/Rf53eR0GM2psfedfSYW7mL1d8RK+voMZdw3oQ9pEi4i4Q9pEi4i4Q9pHj7v6knz/0nc3fsI4Ee/VX1YI0eWfTIokcWPbLs/s6mBwAAAAAAAAAAAABAPx/7XwE9"
     },
     {
       type = "objectgroup",
@@ -76,6 +76,19 @@ return {
           y = 192,
           width = 16,
           height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 3,
+          name = "exit",
+          type = " ",
+          shape = "rectangle",
+          x = 896,
+          y = 48,
+          width = 16,
+          height = 160,
           rotation = 0,
           visible = true,
           properties = {}

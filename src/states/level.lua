@@ -2,6 +2,7 @@
 
 local class = require "lib.middleclass"
 local gamestate = require "lib.hump.gamestate"
+local Timer = require "lib.hump.timer"
 
 local State = require "src.states.state"
 -- Systems
@@ -46,8 +47,11 @@ function LevelState:initialize(game)
         CameraFinishSystem:new()
     )
 
+    self.game = game
+    self.isExitting = false
+
     Camera:new()
-    self.world:addEntity(Level:new("assets/levels/" .. game:getCurrentLevel() .. ".lua", self.world))
+    self.world:addEntity(Level:new("assets/levels/" .. game:getCurrentLevel() .. ".lua", self, self.world))
 end
 
 function LevelState:update(dt)
@@ -63,6 +67,18 @@ function LevelState:update(dt)
         self.world:refresh()
         gamestate.switch(LevelState:new())
     end
+end
+
+function LevelState:exit()
+    if self.isExitting then return end
+
+    self.isExitting = true
+
+    Timer.after(0.1, function()
+        self.game.level = self.game.level + 1
+        self.game:save()
+        gamestate.switch(self.factory.create("LevelIntro", self.game))
+    end)
 end
 
 return LevelState

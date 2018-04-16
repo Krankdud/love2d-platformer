@@ -1,6 +1,7 @@
 --- LevelIntroState displays the level number and title for a short period of time.
 
 local class = require "lib.middleclass"
+local log = require "lib.log"
 local gamestate = require "lib.hump.gamestate"
 local Timer = require "lib.hump.timer"
 
@@ -24,6 +25,8 @@ function LevelIntroState:initialize(game)
     end)
 
     local map = assets.levels[game:getCurrentLevel()]
+
+    log.debug("Reading map '" .. game:getCurrentLevel() .. "'")
 
     local levelNum = "Level " .. game.level
     self.world:addEntity({

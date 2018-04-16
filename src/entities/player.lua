@@ -1,7 +1,7 @@
 local math = math
 
 local class = require "lib.middleclass"
--- local log = require "lib.log"
+local log = require "lib.log"
 local lume = require "lib.lume"
 local Timer = require "lib.hump.timer"
 
@@ -16,7 +16,8 @@ local BONK_PENALTY = 0.3
 local WALLJUMP_SPEED = 4
 
 local Player = class("Player")
-function Player:initialize(x, y, world, collisionWorld)
+function Player:initialize(gameState, x, y, world, collisionWorld)
+    self.gameState = gameState
     self.world = world
 
     self.position = {x = x, y = y}
@@ -75,6 +76,15 @@ function Player:initialize(x, y, world, collisionWorld)
     self.climbDirection = 1
     self.canClimb = true
     self.wallSlideDirection = 0
+end
+
+function Player:onCollision(col)
+    local other = col.other
+    if other.aabb then
+        if other.aabb.type == "exit" then
+            self.gameState:exit()
+        end
+    end
 end
 
 function Player:update(dt)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" nextobjectid="6">
  <properties>
   <property name="title" value="A Test Level"/>
  </properties>
@@ -11,10 +11,11 @@
    <property name="collidable" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzt2EkKwzAQRUH5/pfO3gZZnjqfpgqyEQIND+wk2xhjK/7sXR3vrLqFHnOVZ96vddZLj9q19Dj6Z4+353egR5aqM5+905/O7yKhx2xMj2/X0WNu5S5Wf0esrKPHXMJ5E/aQIuEuEvaQIuEuEvaQ4u3/pu489+/M7dpPj/70yKJHFj2y6JFFjyxff2fTAwAAAAAAAAAAAACgnx8mUwEn
+   eJzt2NsKwjAURcH0/3/a9wppWpvj5jADvoRALgta9RhjHMWfs7vjnVW30GOu8sznta566VG7lh7f/tnj7fkd6JGl6sxX7/Rf53eR0GM2psfedfSYW7mL1d8RK+voMZdw3oQ9pEi4i4Q9pEi4i4Q9pHj7v6knz/0nc3fsI4Ee/VX1YI0eWfTIokcWPbLs/s6mBwAAAAAAAAAAAABAPx/7XwE9
   </data>
  </layer>
  <objectgroup name="entities">
   <object id="1" name="player" x="64" y="192" width="16" height="16"/>
+  <object id="3" name="exit" type=" " x="896" y="48" width="16" height="160"/>
  </objectgroup>
 </map>
