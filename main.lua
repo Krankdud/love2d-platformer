@@ -21,7 +21,7 @@ local StateFactory = require "src.statefactory"
 
 function love.load()
     log.usecolor = false
-    log.outfile = "plat.log"
+    log.outfile = "plat-" .. os.time() .. ".log"
     log.createWriter()
 
     lurker.path = "src"
