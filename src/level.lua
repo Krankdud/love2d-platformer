@@ -26,23 +26,7 @@ function Level:initialize(path, gameState, world)
 
     local entities = self.map.layers["entities"]
     for _,object in ipairs(entities.objects) do
-        if object.name == "player" then
-            local player = Player:new(gameState, object.x, object.y, world, self.collisionWorld)
-            Camera:setFollow(player)
-            world:addEntity(player)
-        elseif object.name == "exit" then
-            local exit = {
-                position = {x = object.x, y = object.y},
-                aabb = {
-                    width = object.width,
-                    height = object.height,
-                    world = self.collisionWorld,
-                    type = "exit"
-                }
-            }
-            self.collisionWorld:add(exit, object.x, object.y, object.width, object.height)
-            world:addEntity(exit)
-        end
+        self:createEntity(object, gameState, world)
     end
 end
 
@@ -50,6 +34,28 @@ end
 function Level:draw()
     love.graphics.setColor(1.0, 1.0, 1.0)
     self.map:drawTileLayer("collision")
+end
+
+function Level:createEntity(object, gameState, world)
+    if object.name == "player" then
+        local player = Player:new(gameState, object.x, object.y, world, self.collisionWorld)
+        gameState.player = player
+        Camera:setFollow(player)
+        world:addEntity(player)
+    else
+        log.debug("Creating generic entity of type " .. object.name)
+        local ent = {
+            position = {x = object.x, y = object.y},
+            aabb = {
+                width = object.width,
+                height = object.height,
+                world = self.collisionWorld,
+                type = object.name
+            }
+        }
+        self.collisionWorld:add(ent, object.x, object.y, object.width, object.height)
+        world:addEntity(ent)
+    end
 end
 
 return Level

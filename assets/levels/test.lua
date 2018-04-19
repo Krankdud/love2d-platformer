@@ -8,7 +8,7 @@ return {
   height = 50,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 6,
+  nextobjectid = 12,
   properties = {
     ["title"] = "A Test Level"
   },
@@ -55,7 +55,7 @@ return {
       },
       encoding = "base64",
       compression = "zlib",
-      data = "eJzt2NsKwjAURcH0/3/a9wppWpvj5jADvoRALgta9RhjHMWfs7vjnVW30GOu8sznta566VG7lh7f/tnj7fkd6JGl6sxX7/Rf53eR0GM2psfedfSYW7mL1d8RK+voMZdw3oQ9pEi4i4Q9pEi4i4Q9pHj7v6knz/0nc3fsI4Ee/VX1YI0eWfTIokcWPbLs/s6mBwAAAAAAAAAAAABAPx/7XwE9"
+      data = "eJzt2EkOwyAQBED8/0/n7kgsAZM2qpK4WMjMTB+8XKWUa/O6G71+st1ZyKNuZ8/3s1p5yWPvWfL49s88Vu8/gTyy7Oq59Uyf3X+KVf22Zlebb+2aPObuI485PbPo+Y6QxxoJ/SbUkCJhFgk1pEiYRUINKUb+O/2yRmp4st63kMf5duVBH3lkkUcWeWSRR5an39nkAQAAAAAAAAAAAABwng9HgAFG"
     },
     {
       type = "objectgroup",
@@ -89,6 +89,32 @@ return {
           y = 48,
           width = 16,
           height = 160,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 7,
+          name = "hurt",
+          type = "",
+          shape = "rectangle",
+          x = 384,
+          y = 304,
+          width = 320,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 11,
+          name = "hurt",
+          type = "",
+          shape = "rectangle",
+          x = 288,
+          y = 96,
+          width = 48,
+          height = 16,
           rotation = 0,
           visible = true,
           properties = {}

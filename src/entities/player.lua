@@ -22,7 +22,7 @@ function Player:initialize(gameState, x, y, world, collisionWorld)
 
     self.position = {x = x, y = y}
 
-    self.aabb = {width = 16, height = 16, world = collisionWorld}
+    self.aabb = {width = 12, height = 12, world = collisionWorld}
     self.collideWithLevel = true
 
     self.acceleration = {x = 0, y = 0.3}
@@ -47,30 +47,38 @@ function Player:initialize(gameState, x, y, world, collisionWorld)
         return collision.isSolid(self.aabb.world, self, self.position.x + 4, self.position.y)
     end, 4)
 
-    self.stateMachine = StateMachine:new(self, {
+    self.state = StateMachine:new(self, {
         enter = "defaultEnter",
         update = "defaultUpdate",
         draw = "defaultDraw"
     })
-    self.stateMachine:addState("climb", {
+    self.state:addState("climb", {
         enter = "climbEnter",
         update = "climbUpdate"
     })
-    self.stateMachine:addState("ceiling", {
+    self.state:addState("ceiling", {
         enter = "ceilingEnter",
         update = "ceilingUpdate"
     })
-    self.stateMachine:addState("wallJump", {
+    self.state:addState("wallJump", {
         enter = "wallJumpEnter",
         update = "wallJumpUpdate"
     })
-    self.stateMachine:addState("ceilingHang", {
+    self.state:addState("ceilingHang", {
         enter = "ceilingHangEnter"
     })
-    self.stateMachine:addState("wallSlide", {
+    self.state:addState("wallSlide", {
         enter = "wallSlideEnter",
         update = "wallSlideUpdate"
     })
+    self.state:addState("dead", {
+        enter = "deadEnter",
+        update = "deadUpdate"
+    })
+    self.state:addState("intro", {
+        update = "introUpdate"
+    })
+    self.state:setState("intro")
 
     self.direction = "right"
     self.climbDirection = 1
@@ -79,21 +87,30 @@ function Player:initialize(gameState, x, y, world, collisionWorld)
 end
 
 function Player:onCollision(col)
+    if self.state:getState() == "dead" then return end
+
     local other = col.other
     if other.aabb then
         if other.aabb.type == "exit" then
             self.gameState:exit()
+        elseif other.aabb.type == "hurt" then
+            self.state:setState("dead")
         end
     end
 end
 
+--- Called when the level intro is over.
+function Player:introDone()
+    self.state:setState("default")
+end
+
 function Player:update(dt)
     self.buffers:updateAll(1)
-    self.stateMachine:update(dt)
+    self.state:update(dt)
 end
 
 function Player:draw()
-    self.stateMachine:draw()
+    self.state:draw()
 end
 
 function Player:defaultUpdate()
@@ -288,8 +305,8 @@ function Player:wallJumpEnter()
     self.velocity.y = -6
 
     Timer.after(0.15, function()
-        if self.stateMachine:getState() == "wallJump" then
-            self.stateMachine:setState("default")
+        if self.state:getState() == "wallJump" then
+            self.state:setState("default")
         end
     end)
 end
@@ -300,8 +317,8 @@ function Player:ceilingHangEnter()
     self.velocity.y = 0
 
     Timer.after(0.1, function()
-        if self.stateMachine:getState() == "ceilingHang" then
-            self.stateMachine:setState("default")
+        if self.state:getState() == "ceilingHang" then
+            self.state:setState("default")
         end
     end)
 end
@@ -337,6 +354,21 @@ function Player:wallSlideUpdate()
     if not collision.isSolid(self.aabb.world, self, self.position.x + self.wallSlideDirection, self.position.y) then
         return "default"
     end
+end
+
+function Player:deadEnter()
+    self.acceleration.x = 0
+    self.acceleration.y = 0
+    self.velocity.x = 0
+    self.velocity.y = 0
+
+    self.gameState:playerDied()
+end
+
+function Player:deadUpdate()
+end
+
+function Player:introUpdate()
 end
 
 function Player:shoot()

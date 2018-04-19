@@ -13,12 +13,14 @@ local CollisionDetectionSystem  = require "src.systems.collisiondetection"
 local CollisionResolutionSystem = require "src.systems.collisionresolution"
 local CollisionWithLevelSystem  = require "src.systems.collisionwithlevel"
 local DrawSystem                = require "src.systems.draw"
+local DrawOnTopSystem           = require "src.systems.drawOnTop"
 local IntegrateAxisSystem       = require "src.systems.integrateaxis"
 local LimitVelocitySystem       = require "src.systems.limitvelocity"
 local TimerSystem               = require "src.systems.timer"
 local UpdateSystem              = require "src.systems.update"
 
 local Camera = require "src.camera"
+local Fade = require "src.entities.fade"
 local Level = require "src.level"
 local PlayerInput = require "src.input.player"
 
@@ -44,20 +46,26 @@ function LevelState:initialize(game)
 
         CameraStartSystem:new(),
         DrawSystem:new(),
-        CameraFinishSystem:new()
+        CameraFinishSystem:new(),
+        DrawOnTopSystem:new()
     )
 
     self.game = game
     self.isExitting = false
+    self.canPause = false
 
     Camera:new()
     self.world:addEntity(Level:new("assets/levels/" .. game:getCurrentLevel() .. ".lua", self, self.world))
+    self.world:addEntity(Fade:new({0, 0, 0, 1}, {0, 0, 0, 0}, 0.5, function()
+        self.player:introDone()
+        self.canPause = true
+    end))
 end
 
 function LevelState:update(dt)
     State.update(self, dt)
 
-    if PlayerInput:pressed("pause") then
+    if self.canPause and PlayerInput:pressed("pause") then
         gamestate.push(self.factory.create("PauseMenu"))
     end
 
@@ -79,6 +87,14 @@ function LevelState:exit()
         self.game:save()
         gamestate.switch(self.factory.create("LevelIntro", self.game))
     end)
+end
+
+function LevelState:playerDied()
+    self.world:addEntity(Fade:new({0, 0, 0, 0}, {0, 0, 0, 1}, 0.5, function()
+        gamestate.switch(self.factory.create("Level", self.game))
+    end))
+
+    self.canPause = false
 end
 
 return LevelState
