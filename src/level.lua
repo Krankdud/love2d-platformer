@@ -7,6 +7,7 @@ local log = require "lib.log"
 local sti = require "lib.sti"
 
 local Camera = require "src.camera"
+local Collision = require "src.util.collision"
 
 -- Entities
 local Player = require "src.entities.player"
@@ -50,7 +51,8 @@ function Level:createEntity(object, gameState, world)
                 width = object.width,
                 height = object.height,
                 world = self.collisionWorld,
-                type = object.name
+                type = object.name,
+                filter = Collision.filter.ignoreAll
             }
         }
         self.collisionWorld:add(ent, object.x, object.y, object.width, object.height)

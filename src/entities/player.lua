@@ -187,7 +187,7 @@ end
 
 function Player:defaultDraw()
     love.graphics.setColor(1.0, 1.0, 0.0)
-    love.graphics.rectangle("fill", self.position.x, self.position.y, self.aabb.width, self.aabb.height)
+    love.graphics.rectangle("fill", lume.round(self.position.x), lume.round(self.position.y), self.aabb.width, self.aabb.height)
 end
 
 function Player:defaultEnter()

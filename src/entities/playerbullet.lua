@@ -11,7 +11,7 @@ function PlayerBullet:initialize(x, y, direction, playerVelocity, world, collisi
     Bullet.initialize(self, x, y, 4, 4, world, collisionWorld)
 
     self.aabb.type = "bullet"
-    self.aabb.filter = Collision.defaultFilter
+    self.aabb.filter = Collision.filter.default
 
     if direction == "right" then
         self.velocity.x = math.max(4, 4 + playerVelocity.x)

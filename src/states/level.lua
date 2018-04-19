@@ -12,6 +12,7 @@ local CameraUpdateSystem        = require "src.systems.cameraupdate"
 local CollisionDetectionSystem  = require "src.systems.collisiondetection"
 local CollisionResolutionSystem = require "src.systems.collisionresolution"
 local CollisionWithLevelSystem  = require "src.systems.collisionwithlevel"
+local DebugAABBSystem           = require "src.systems.debugaabb"
 local DrawSystem                = require "src.systems.draw"
 local DrawOnTopSystem           = require "src.systems.drawOnTop"
 local IntegrateAxisSystem       = require "src.systems.integrateaxis"
@@ -46,6 +47,7 @@ function LevelState:initialize(game)
 
         CameraStartSystem:new(),
         DrawSystem:new(),
+        DebugAABBSystem:new(),
         CameraFinishSystem:new(),
         DrawOnTopSystem:new()
     )
@@ -56,7 +58,7 @@ function LevelState:initialize(game)
 
     Camera:new()
     self.world:addEntity(Level:new("assets/levels/" .. game:getCurrentLevel() .. ".lua", self, self.world))
-    self.world:addEntity(Fade:new({0, 0, 0, 1}, {0, 0, 0, 0}, 0.5, function()
+    self.world:addEntity(Fade:new({0, 0, 0, 1}, {0, 0, 0, 0}, 0.25, function()
         self.player:introDone()
         self.canPause = true
     end))
@@ -90,7 +92,7 @@ function LevelState:exit()
 end
 
 function LevelState:playerDied()
-    self.world:addEntity(Fade:new({0, 0, 0, 0}, {0, 0, 0, 1}, 0.5, function()
+    self.world:addEntity(Fade:new({0, 0, 0, 0}, {0, 0, 0, 1}, 0.25, function()
         gamestate.switch(self.factory.create("Level", self.game))
     end))
 

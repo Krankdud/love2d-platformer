@@ -1,5 +1,5 @@
 --- Camera
-
+local lume = require "lib.lume"
 local ScreenScaler = require "src.screenscaler"
 
 local Camera = {}
@@ -38,7 +38,7 @@ end
 -- Call before drawing anything that is effected by the camera.
 function Camera:start()
     love.graphics.push()
-    love.graphics.translate(self.x, self.y)
+    love.graphics.translate(lume.round(self.x), lume.round(self.y))
 end
 
 --- Finish using the camera.

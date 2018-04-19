@@ -8,7 +8,7 @@ return {
   height = 50,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 12,
+  nextobjectid = 16,
   properties = {
     ["title"] = "A Test Level"
   },

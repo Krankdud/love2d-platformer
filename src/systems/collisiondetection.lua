@@ -11,7 +11,7 @@ CollisionDetectionSystem.filter = tiny.requireAll("position", "aabb")
 --- Detects collisions using bump
 -- @param e Entity
 function CollisionDetectionSystem:process(e)
-    local filter = e.aabb.filter ~= nil and e.aabb.filter or Collision.defaultFilter
+    local filter = e.aabb.filter ~= nil and e.aabb.filter or Collision.filter.default
     local actualX, actualY, cols = e.aabb.world:move(e, e.position.x, e.position.y, filter)
     e.position.x = actualX
     e.position.y = actualY
