@@ -4,6 +4,7 @@
 local class = require "lib.middleclass"
 local tiny = require "lib.tiny"
 
+local config = require "src.config"
 local graphs = require "src.graphs"
 local screenScaler = require "src.screenscaler"
 
@@ -46,7 +47,9 @@ function State:draw()
     screenScaler:finish()
     screenScaler:draw()
 
-    graphs:draw()
+    if config.debug.showGraphs then
+        graphs:draw()
+    end
 end
 
 return State

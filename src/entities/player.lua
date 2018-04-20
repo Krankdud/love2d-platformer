@@ -22,7 +22,7 @@ function Player:initialize(gameState, x, y, world, collisionWorld)
 
     self.position = {x = x, y = y}
 
-    self.aabb = {width = 12, height = 12, world = collisionWorld}
+    self.aabb = {width = 12, height = 12, world = collisionWorld, type="player"}
     self.collideWithLevel = true
 
     self.acceleration = {x = 0, y = 0.3}

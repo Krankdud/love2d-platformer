@@ -11,8 +11,29 @@ local config = {
     framerate = -1,
 
     soundVolume = 100,
-    musicVolume = 100
+    musicVolume = 100,
+
+    debug = {
+        showAABB = false,
+        showGraphs = true
+    }
 }
+
+--- Safely sets a property. Doesn't set the property if it doesn't exist.
+local function getProperty(default, ini, ...)
+    local args = {...}
+    local t = ini
+    for i=1, #args do
+        local key = args[i]
+        if t[key] then
+            t = t[key]
+        else
+            return default
+        end
+    end
+
+    return t ~= nil and t or default
+end
 
 --- Saves the config as an ini file.
 -- @param path File path. Defaults to "config.ini"
@@ -37,6 +58,10 @@ function config.save(path)
             down = PlayerInput.config.controls.down[1],
             jump = PlayerInput.config.controls.jump[1],
             shoot = PlayerInput.config.controls.shoot[1]
+        },
+        debug = {
+            aabb = config.debug.showAABB,
+            graphs = config.debug.showGraphs
         }
     }
 
@@ -58,20 +83,23 @@ function config.load(path)
 
     local ini = inifile.parse(path)
 
-    config.resolution.fullscreen = ini.graphics.fullscreen
-    config.resolution.vsync = ini.graphics.vsync
-    config.resolution.currentResolution = ini.graphics.resolution
+    config.resolution.fullscreen = getProperty(config.resolution.fullscreen, ini, "graphics", "fullscreen")
+    config.resolution.vsync = getProperty(config.resolution.vsync, ini, "graphics", "vsync")
+    config.resolution.currentResolution = getProperty(config.resolution.currentResolution, ini, "graphics", "resolution")
 
-    config.framerate = ini.graphics.framerate
-    config.soundVolume = ini.audio.soundvolume
-    config.musicVolume = ini.audio.musicvolume
+    config.framerate = getProperty(config.framerate, ini, "graphics", "framerate")
+    config.soundVolume = getProperty(config.soundVolume, ini, "audio", "soundvolume")
+    config.musicVolume = getProperty(config.musicVolume, ini, "audio", "musicvolume")
 
-    PlayerInput.config.controls.left[1] = ini.controls.left
-    PlayerInput.config.controls.right[1] = ini.controls.right
-    PlayerInput.config.controls.up[1] = ini.controls.up
-    PlayerInput.config.controls.down[1] = ini.controls.down
-    PlayerInput.config.controls.jump[1] = ini.controls.jump
-    PlayerInput.config.controls.shoot[1] = ini.controls.shoot
+    PlayerInput.config.controls.left[1] = getProperty(PlayerInput.config.controls.left[1], ini, "controls", "left")
+    PlayerInput.config.controls.right[1] = getProperty(PlayerInput.config.controls.right[1], ini, "controls", "right")
+    PlayerInput.config.controls.up[1] = getProperty(PlayerInput.config.controls.up[1], ini, "controls", "up")
+    PlayerInput.config.controls.down[1] = getProperty(PlayerInput.config.controls.down[1], ini, "controls", "down")
+    PlayerInput.config.controls.jump[1] = getProperty(PlayerInput.config.controls.jump[1], ini, "controls", "jump")
+    PlayerInput.config.controls.shoot[1] = getProperty(PlayerInput.config.controls.shoot[1], ini, "controls", "shoot")
+
+    config.debug.showAABB = getProperty(config.debug.showAABB, ini, "debug", "aabb")
+    config.debug.showGraphs = getProperty(config.debug.showGraphs, ini, "debug", "graphs")
 
     log.debug("Loaded config from " .. path)
 

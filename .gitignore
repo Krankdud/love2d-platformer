@@ -129,3 +129,6 @@ $RECYCLE.BIN/
 
 # ldoc output
 doc/
+
+# config files
+config.ini
