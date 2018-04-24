@@ -14,7 +14,19 @@ local StateMachine = require "src.util.statemachine"
 local PlayerBullet = require "src.entities.playerbullet"
 
 local BONK_PENALTY = 0.3
+
+local CLIMB_ACCEL = -1
+local CLIMB_SPEED = -4
+local FALL_SPEED = 8
+local JUMP_SPEED = -6
+local RUN_SPEED = 3
 local WALLJUMP_SPEED = 4
+local WALLSLIDE_SPEED = 2.5
+
+local GRAVITY = 0.3
+
+local CEILING_HANG_TIME = 0.1
+local WALLJUMP_TIME = 0.15
 
 local Player = class("Player")
 function Player:initialize(gameState, x, y, world, collisionWorld)
@@ -26,10 +38,10 @@ function Player:initialize(gameState, x, y, world, collisionWorld)
     self.aabb = {width = 12, height = 12, world = collisionWorld, type="player"}
     self.collideWithLevel = true
 
-    self.acceleration = {x = 0, y = 0.3}
+    self.acceleration = {x = 0, y = GRAVITY}
     self.velocity = {x = 0, y = 0}
-    self.minVelocity = {x = -2.5, y = -4000}
-    self.maxVelocity = {x = 2.5, y = 8}
+    self.minVelocity = {x = -RUN_SPEED, y = -4000}
+    self.maxVelocity = {x = RUN_SPEED, y = FALL_SPEED}
 
     collisionWorld:add(self, self.position.x, self.position.y, self.aabb.width, self.aabb.height)
 
@@ -153,7 +165,7 @@ function Player:defaultUpdate()
     local nearRightWall = self.buffers:get("nearRightWall")
     -- Jumping
     if jumpPressed and onGround and self.velocity.y >= 0 then
-        self.velocity.y = -6
+        self.velocity.y = JUMP_SPEED
         self.aabb.onGround = false
         self.buffers:update("jump", 999)
         self.buffers:update("onGround", 999)
@@ -199,11 +211,11 @@ end
 
 function Player:defaultEnter()
     self.acceleration.x = 0
-    self.acceleration.y = 0.3
-    self.minVelocity.x = -2.5
+    self.acceleration.y = GRAVITY
+    self.minVelocity.x = -RUN_SPEED
     self.minVelocity.y = -4000
-    self.maxVelocity.x = 2.5
-    self.maxVelocity.y = 8
+    self.maxVelocity.x = RUN_SPEED
+    self.maxVelocity.y = FALL_SPEED
 end
 
 function Player:climbUpdate()
@@ -248,9 +260,9 @@ end
 function Player:climbEnter()
     self:defaultEnter()
     self.acceleration.x = 0
-    self.acceleration.y = -1
+    self.acceleration.y = CLIMB_ACCEL
     self.velocity.y = 0
-    self.minVelocity.y = -3
+    self.minVelocity.y = CLIMB_SPEED
 
     self.oldDirection = self.direction
     self.direction = "up"
@@ -309,9 +321,9 @@ function Player:wallJumpEnter()
     self:defaultEnter()
     self.maxVelocity.x = WALLJUMP_SPEED
 
-    self.velocity.y = -6
+    self.velocity.y = JUMP_SPEED
 
-    Timer.after(0.15, function()
+    Timer.after(WALLJUMP_TIME, function()
         if self.state:getState() == "wallJump" then
             self.state:setState("default")
         end
@@ -323,7 +335,7 @@ function Player:ceilingHangEnter()
     self.acceleration.y = 0
     self.velocity.y = 0
 
-    Timer.after(0.1, function()
+    Timer.after(CEILING_HANG_TIME, function()
         if self.state:getState() == "ceilingHang" then
             self.state:setState("default")
         end
@@ -332,7 +344,7 @@ end
 
 function Player:wallSlideEnter()
     self:defaultEnter()
-    self.maxVelocity.y = 2.5
+    self.maxVelocity.y = WALLSLIDE_SPEED
 end
 
 function Player:wallSlideUpdate()
