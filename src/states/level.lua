@@ -13,14 +13,18 @@ local CollisionDetectionSystem  = require "src.systems.collisiondetection"
 local CollisionResolutionSystem = require "src.systems.collisionresolution"
 local CollisionWithLevelSystem  = require "src.systems.collisionwithlevel"
 local DebugAABBSystem           = require "src.systems.debugaabb"
+local DebugTrackerSystem        = require "src.systems.debugtracker"
 local DrawSystem                = require "src.systems.draw"
 local DrawOnTopSystem           = require "src.systems.drawOnTop"
 local IntegrateAxisSystem       = require "src.systems.integrateaxis"
 local LimitVelocitySystem       = require "src.systems.limitvelocity"
+local ScreenScalerStartSystem   = require "src.systems.screenscalerstart"
+local ScreenScalerFinishSystem  = require "src.systems.screenscalerfinish"
 local TimerSystem               = require "src.systems.timer"
 local UpdateSystem              = require "src.systems.update"
 
 local Camera = require "src.camera"
+local DebugTracker = require "src.debug.tracker"
 local Fade = require "src.entities.fade"
 local Level = require "src.level"
 local PlayerInput = require "src.input.player"
@@ -45,16 +49,23 @@ function LevelState:initialize(game)
 
         CameraUpdateSystem:new(),
 
+        ScreenScalerStartSystem:new(),
         CameraStartSystem:new(),
         DrawSystem:new(),
         DebugAABBSystem:new(),
         CameraFinishSystem:new(),
-        DrawOnTopSystem:new()
+
+        DrawOnTopSystem:new(),
+        ScreenScalerFinishSystem:new(),
+
+        DebugTrackerSystem:new()
     )
 
     self.game = game
     self.isExitting = false
     self.canPause = false
+
+    DebugTracker:clear()
 
     Camera:new()
     self.world:addEntity(Level:new("assets/levels/" .. game:getCurrentLevel() .. ".lua", self, self.world))

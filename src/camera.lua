@@ -1,5 +1,7 @@
 --- Camera
 local lume = require "lib.lume"
+
+local DebugTracker = require "src.debug.tracker"
 local ScreenScaler = require "src.screenscaler"
 
 local Camera = {}
@@ -8,6 +10,9 @@ local Camera = {}
 function Camera:new()
     self.x = 0
     self.y = 0
+
+    DebugTracker:append("camera.x", function() return self.x end)
+    DebugTracker:append("camera.y", function() return self.y end)
 end
 
 --- Set which entity to follow.
@@ -29,8 +34,8 @@ function Camera:update()
             offsetY = self.follow.aabb.height / 2
         end
 
-        self.x = -self.follow.position.x + ScreenScaler.width / 2 - offsetX
-        self.y = -self.follow.position.y + ScreenScaler.height / 2 - offsetY
+        self.x = -lume.round(self.follow.position.x) + ScreenScaler.width / 2 - offsetX
+        self.y = -lume.round(self.follow.position.y) + ScreenScaler.height / 2 - offsetY
     end
 end
 
@@ -38,7 +43,7 @@ end
 -- Call before drawing anything that is effected by the camera.
 function Camera:start()
     love.graphics.push()
-    love.graphics.translate(lume.round(self.x), lume.round(self.y))
+    love.graphics.translate(self.x, self.y)
 end
 
 --- Finish using the camera.

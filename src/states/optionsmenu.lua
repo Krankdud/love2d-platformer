@@ -4,8 +4,10 @@ local class = require "lib.middleclass"
 local gamestate = require "lib.hump.gamestate"
 
 -- Systems
-local DrawSystem   = require "src.systems.draw"
-local UpdateSystem = require "src.systems.update"
+local DrawSystem               = require "src.systems.draw"
+local ScreenScalerStartSystem  = require "src.systems.screenscalerstart"
+local ScreenScalerFinishSystem = require "src.systems.screenscalerfinish"
+local UpdateSystem             = require "src.systems.update"
 
 local config = require "src.config"
 local Menu = require "src.menu"
@@ -25,7 +27,9 @@ local OptionsMenuState = class("OptioneMenuState", State)
 function OptionsMenuState:initialize()
     State.initialize(self,
         UpdateSystem:new(),
-        DrawSystem:new()
+        ScreenScalerStartSystem:new(),
+        DrawSystem:new(),
+        ScreenScalerFinishSystem:new()
     )
 
     local resolution = config.resolution:get()

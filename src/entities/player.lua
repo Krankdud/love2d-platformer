@@ -1,12 +1,13 @@
 local math = math
 
 local class = require "lib.middleclass"
-local log = require "lib.log"
+--local log = require "lib.log"
 local lume = require "lib.lume"
 local Timer = require "lib.hump.timer"
 
 local BufferCollection = require "src.util.buffercollection"
 local collision = require "src.util.collision"
+local DebugTracker = require "src.debug.tracker"
 local input = require "src.input.player"
 local StateMachine = require "src.util.statemachine"
 
@@ -84,6 +85,12 @@ function Player:initialize(gameState, x, y, world, collisionWorld)
     self.climbDirection = 1
     self.canClimb = true
     self.wallSlideDirection = 0
+
+    DebugTracker:append("player.x", function() return self.position.x end)
+    DebugTracker:append("player.y", function() return self.position.y end)
+    DebugTracker:append("player.velocity.x", function() return self.velocity.x end)
+    DebugTracker:append("player.velocity.y", function() return self.velocity.y end)
+    DebugTracker:append("player.state", function() return self.state:getState() end)
 end
 
 function Player:onCollision(col)

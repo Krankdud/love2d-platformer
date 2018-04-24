@@ -8,8 +8,10 @@ local Timer = require "lib.hump.timer"
 local screenScaler = require "src.screenscaler"
 local State = require "src.states.state"
 -- Systems
-local DrawSystem = require "src.systems.draw"
-local TimerSystem = require "src.systems.timer"
+local DrawSystem               = require "src.systems.draw"
+local ScreenScalerStartSystem  = require "src.systems.screenscalerstart"
+local ScreenScalerFinishSystem = require "src.systems.screenscalerfinish"
+local TimerSystem              = require "src.systems.timer"
 
 local LevelIntroState = class("LevelIntroState", State)
 --- Initializes the level intro state.
@@ -17,7 +19,9 @@ local LevelIntroState = class("LevelIntroState", State)
 function LevelIntroState:initialize(game)
     State.initialize(self,
         TimerSystem:new(),
-        DrawSystem:new()
+        ScreenScalerStartSystem:new(),
+        DrawSystem:new(),
+        ScreenScalerFinishSystem:new()
     )
 
     Timer.after(3, function()

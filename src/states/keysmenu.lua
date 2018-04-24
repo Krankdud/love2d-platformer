@@ -2,9 +2,11 @@ local class = require "lib.middleclass"
 local gamestate = require "lib.hump.gamestate"
 
 -- Systems
-local DrawSystem   = require "src.systems.draw"
-local TimerSystem  = require "src.systems.timer"
-local UpdateSystem = require "src.systems.update"
+local DrawSystem               = require "src.systems.draw"
+local TimerSystem              = require "src.systems.timer"
+local ScreenScalerStartSystem  = require "src.systems.screenscalerstart"
+local ScreenScalerFinishSystem = require "src.systems.screenscalerfinish"
+local UpdateSystem             = require "src.systems.update"
 
 local BindKeyItem = require "src.menu.bindkeyitem"
 local Menu = require "src.menu"
@@ -16,7 +18,9 @@ function KeysMenuState:initialize()
     State.initialize(self,
         TimerSystem:new(),
         UpdateSystem:new(),
-        DrawSystem:new()
+        ScreenScalerStartSystem:new(),
+        DrawSystem:new(),
+        ScreenScalerFinishSystem:new()
     )
 
     self.menu = Menu:new({

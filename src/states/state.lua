@@ -6,7 +6,6 @@ local tiny = require "lib.tiny"
 
 local config = require "src.config"
 local graphs = require "src.graphs"
-local screenScaler = require "src.screenscaler"
 
 local function filterDrawSystem(_, s)
     -- if nil return false instead of nil
@@ -42,10 +41,7 @@ end
 
 --- Draws the state
 function State:draw()
-    screenScaler:start()
     self.world:update(0, filterDrawSystem)
-    screenScaler:finish()
-    screenScaler:draw()
 
     if config.debug.showGraphs then
         graphs:draw()

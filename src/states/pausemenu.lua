@@ -5,8 +5,10 @@ local Menu = require "src.menu"
 local State = require "src.states.state"
 
 -- Systems
-local DrawSystem   = require "src.systems.draw"
-local UpdateSystem = require "src.systems.update"
+local DrawSystem               = require "src.systems.draw"
+local ScreenScalerStartSystem  = require "src.systems.screenscalerstart"
+local ScreenScalerFinishSystem = require "src.systems.screenscalerfinish"
+local UpdateSystem             = require "src.systems.update"
 
 local PlayerInput = require "src.input.player"
 
@@ -14,7 +16,9 @@ local PauseMenuState = class("PauseMenuState", State)
 function PauseMenuState:initialize()
     State.initialize(self,
         UpdateSystem:new(),
-        DrawSystem:new()
+        ScreenScalerStartSystem:new(),
+        DrawSystem:new(),
+        ScreenScalerFinishSystem:new()
     )
 
     self.menu = Menu:new({
