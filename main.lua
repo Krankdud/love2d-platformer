@@ -32,7 +32,7 @@ function love.load()
     require "lib.autobatch"
 
     graphs:init()
-    screenScaler:init(320, 240)
+    screenScaler:init(640, 360)
 
     gamestate.registerEvents()
     gamestate.switch(StateFactory.create("MainMenu"))

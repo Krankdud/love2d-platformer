@@ -3,36 +3,20 @@
 
 local Resolution = {
     {
-        width = 320,
-        height = 240
-    },
-    {
         width = 640,
-        height = 480
-    },
-    {
-        width = 800,
-        height = 600
+        height = 360
     },
     {
         width = 960,
-        height = 720
-    },
-    {
-        width = 1024,
-        height = 768,
+        height = 540
     },
     {
         width = 1280,
-        height = 960
+        height = 720
     },
     {
-        width = 1440,
+        width = 1920,
         height = 1080
-    },
-    {
-        width = 1600,
-        height = 1200
     }
 }
 
