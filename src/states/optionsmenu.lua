@@ -2,7 +2,6 @@ local math = math
 
 local class = require "lib.middleclass"
 local gamestate = require "lib.hump.gamestate"
-local log = require "lib.log"
 
 -- Systems
 local DrawSystem               = require "src.systems.draw"
@@ -178,9 +177,7 @@ function OptionsMenuState:initialize(background)
             title = "Back",
             caption = "Return to the main menu",
             confirm = function()
-                log.debug("draw:", self.draw, "love.draw", love.draw)
                 gamestate.pop()
-                log.debug("love.draw", love.draw)
             end
         }
     },

@@ -28,10 +28,9 @@ local function __NULL__() end
 
  -- default gamestate produces error on every callback
 local state_init = setmetatable({leave = __NULL__},
-        {__index = function() error("Gamestate not initialized. Use Gamestate.switch()") end})
+        {__index = function() error("Gamestate not initialized. Use Gamestate.init()") end})
 local stack = {state_init}
 local initialized_states = setmetatable({}, {__mode = "k"})
-local state_is_dirty = true
 
 local GS = {}
 function GS.new(t) return t or {} end -- constructor - deprecated!
@@ -44,30 +43,52 @@ local function change_state(stack_offset, to, ...)
     initialized_states[to] = __NULL__
 
     stack[#stack+stack_offset] = to
-    state_is_dirty = true
     return (to.enter or __NULL__)(to, pre, ...)
+end
+
+function GS.init(to, ...)
+    change_state(0, to, ...)
 end
 
 function GS.switch(to, ...)
     assert(to, "Missing argument: Gamestate to switch to")
     assert(to ~= GS, "Can't call switch with colon operator")
-    ;(stack[#stack].leave or __NULL__)(stack[#stack])
-    return change_state(0, to, ...)
+
+    local varargs = {...}
+    local from = stack[#stack]
+    from.update = function(_, dt)
+        (from.leave or __NULL__)(from)
+        change_state(0, to, unpack(varargs))
+        to:update(dt)
+    end
 end
 
 function GS.push(to, ...)
     assert(to, "Missing argument: Gamestate to switch to")
     assert(to ~= GS, "Can't call push with colon operator")
-    return change_state(1, to, ...)
+
+    local varargs = {...}
+    local from = stack[#stack]
+    local oldUpdate = from.update
+    from.update = function(_, dt)
+        change_state(1, to, unpack(varargs))
+        from.update = oldUpdate
+        to:update(dt)
+    end
 end
 
 function GS.pop(...)
     assert(#stack > 1, "No more states to pop!")
+
+    local varargs = {...}
     local pre, to = stack[#stack], stack[#stack-1]
-    stack[#stack] = nil
-    ;(pre.leave or __NULL__)(pre)
-    state_is_dirty = true
-    return (to.resume or __NULL__)(to, pre, ...)
+
+    pre.update = function(_, dt)
+        stack[#stack] = nil
+        ;(pre.leave or __NULL__)(pre)
+        ;(to.resume or __NULL__)(to, pre, unpack(varargs))
+        to:update(dt)
+    end
 end
 
 function GS.current()
@@ -94,15 +115,9 @@ end
 
 -- forward any undefined functions
 setmetatable(GS, {__index = function(_, func)
-    -- call function only if at least one 'update' was called beforehand
-    -- (see issue #46)
-    if not state_is_dirty or func == 'update' then
-        state_is_dirty = false
-        return function(...)
-            return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
-        end
+    return function(...)
+        return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
     end
-    return __NULL__
 end})
 
 return GS

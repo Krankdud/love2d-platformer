@@ -39,7 +39,7 @@ function love.load()
     screenScaler:init(640, 360)
 
     gamestate.registerEvents()
-    gamestate.switch(StateFactory.create("MainMenu"))
+    gamestate.init(StateFactory.create("MainMenu"))
 end
 
 function love.run()
