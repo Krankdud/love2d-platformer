@@ -33,6 +33,8 @@ function Player:initialize(gameState, x, y, world, collisionWorld)
     self.gameState = gameState
     self.world = world
 
+    self.drawLayer = 500
+
     self.position = {x = x, y = y}
 
     self.aabb = {width = 12, height = 12, world = collisionWorld, type="player"}

@@ -10,6 +10,8 @@ local PlayerBullet = class("PlayerBullet", Bullet)
 function PlayerBullet:initialize(x, y, direction, playerVelocity, world, collisionWorld)
     Bullet.initialize(self, x, y, 4, 4, world, collisionWorld)
 
+    self.drawLayer = 499
+
     self.aabb.type = "bullet"
     self.aabb.filter = Collision.filter.default
 

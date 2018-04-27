@@ -10,6 +10,11 @@ return {
   tileheight = 16,
   nextobjectid = 16,
   properties = {
+    ["fogColor"] = "#ff002a6a",
+    ["fogDensity"] = 0.5,
+    ["sky"] = "sky",
+    ["skyScrollX"] = 0.2,
+    ["skyScrollY"] = 0.1,
     ["title"] = "A Test Level"
   },
   tilesets = {

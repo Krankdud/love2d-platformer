@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" nextobjectid="16">
  <properties>
+  <property name="fogColor" type="color" value="#ff002a6a"/>
+  <property name="fogDensity" type="float" value="0.5"/>
+  <property name="sky" value="sky"/>
+  <property name="skyScrollX" type="float" value="0.2"/>
+  <property name="skyScrollY" type="float" value="0.1"/>
   <property name="title" value="A Test Level"/>
  </properties>
  <tileset firstgid="1" name="grid" tilewidth="16" tileheight="16" tilecount="1" columns="1">

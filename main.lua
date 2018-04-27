@@ -5,8 +5,12 @@ local lurker = require "lib.lurker"
 assets = require("lib.cargo").init({
     dir = "assets",
     processors = {
-        ['images/'] = function(image)
+        ['graphics/'] = function(image)
             image:setFilter("nearest", "nearest")
+        end,
+        ['graphics/sky/'] = function(image)
+            image:setFilter("nearest", "nearest")
+            image:setWrap("repeat", "repeat")
         end
     }
 })

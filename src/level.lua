@@ -8,6 +8,7 @@ local sti = require "lib.sti"
 
 local Camera = require "src.camera"
 local Collision = require "src.util.collision"
+local Sky = require "src.effects.sky"
 
 -- Entities
 local Player = require "src.entities.player"
@@ -29,6 +30,28 @@ function Level:initialize(path, gameState, world)
     for _,object in ipairs(entities.objects) do
         self:createEntity(object, gameState, world)
     end
+
+    if self.map.properties.sky then
+        local texture = assets.graphics.sky[self.map.properties.sky]
+        local fogDensity = self.map.properties.fogDensity
+        local scrollX = self.map.properties.skyScrollX
+        local scrollY = self.map.properties.skyScrollY
+
+        local fogColor
+        if self.map.properties.fogColor then
+            local a, r, g, b = self.map.properties.fogColor:match("#(%x%x)(%x%x)(%x%x)(%x%x)")
+            r = tonumber(r, 16) / 0xff
+            g = tonumber(g, 16) / 0xff
+            b = tonumber(b, 16) / 0xff
+            a = tonumber(a, 16) / 0xff
+            fogColor = {r, g, b, a}
+        end
+
+        local sky = Sky:new(texture, fogDensity, fogColor, scrollX, scrollY)
+        world:addEntity(sky)
+    end
+
+    self.drawLayer = 10
 end
 
 --- Draws the tile layers
