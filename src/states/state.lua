@@ -13,7 +13,17 @@ local function filterDrawSystem(_, s)
 end
 
 local function filterUpdateSystem(_, s)
-    return not s.isDrawSystem
+    return not s.isDrawSystem and not s.isPreDrawSystem and not s.isPostDrawSystem
+end
+
+local function filterPreDrawSystem(_, s)
+    -- if nil return false instead of nil
+    return not not s.isPreDrawSystem
+end
+
+local function filterPostDrawSystem(_, s)
+    -- if nil return false instead of nil
+    return not not s.isPostDrawSystem
 end
 
 local State = class("State")
@@ -41,11 +51,25 @@ end
 
 --- Draws the state
 function State:draw()
-    self.world:update(0, filterDrawSystem)
+    self:preDraw()
+    self:onDraw()
+    self:postDraw()
 
     if config.debug.showGraphs then
         graphs:draw()
     end
+end
+
+function State:preDraw()
+    self.world:update(0, filterPreDrawSystem)
+end
+
+function State:onDraw()
+    self.world:update(0, filterDrawSystem)
+end
+
+function State:postDraw()
+    self.world:update(0, filterPostDrawSystem)
 end
 
 return State

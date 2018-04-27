@@ -49,13 +49,18 @@ function LevelState:initialize(game)
 
         CameraUpdateSystem:new(),
 
+        -- Pre draw
         ScreenScalerStartSystem:new(),
+
+        -- On draw
         CameraStartSystem:new(),
         DrawSystem:new(),
         DebugAABBSystem:new(),
         CameraFinishSystem:new(),
 
         DrawOnTopSystem:new(),
+
+        -- Post draw
         ScreenScalerFinishSystem:new(),
 
         DebugTrackerSystem:new()
@@ -79,7 +84,11 @@ function LevelState:update(dt)
     State.update(self, dt)
 
     if self.canPause and PlayerInput:pressed("pause") then
-        gamestate.push(self.factory.create("PauseMenu"))
+        local canvas = love.graphics.newCanvas()
+        love.graphics.setCanvas(canvas)
+        self:onDraw()
+        love.graphics.setCanvas()
+        gamestate.push(self.factory.create("PauseMenu", canvas))
     end
 
     if love.keyboard.isScancodeDown("f5") then

@@ -2,6 +2,7 @@ local math = math
 
 local class = require "lib.middleclass"
 local gamestate = require "lib.hump.gamestate"
+local log = require "lib.log"
 
 -- Systems
 local DrawSystem               = require "src.systems.draw"
@@ -24,13 +25,22 @@ local framerates = {
 local currentFramerate = 1
 
 local OptionsMenuState = class("OptioneMenuState", State)
-function OptionsMenuState:initialize()
+function OptionsMenuState:initialize(background)
     State.initialize(self,
         UpdateSystem:new(),
         ScreenScalerStartSystem:new(),
         DrawSystem:new(),
         ScreenScalerFinishSystem:new()
     )
+
+    if background then
+        self.world:addEntity({
+            draw = function()
+                love.graphics.setColor(1, 1, 1, 0.3)
+                love.graphics.draw(background)
+            end
+        })
+    end
 
     local resolution = config.resolution:get()
 
@@ -161,14 +171,16 @@ function OptionsMenuState:initialize()
             title = "Key Bindings",
             caption = "Customize your controls",
             confirm = function()
-                gamestate.push(self.factory.create("KeysMenu"))
+                gamestate.push(self.factory.create("KeysMenu", background))
             end
         },
         {
             title = "Back",
             caption = "Return to the main menu",
             confirm = function()
+                log.debug("draw:", self.draw, "love.draw", love.draw)
                 gamestate.pop()
+                log.debug("love.draw", love.draw)
             end
         }
     },

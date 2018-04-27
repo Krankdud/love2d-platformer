@@ -14,7 +14,7 @@ local PlayerInput = require "src.input.player"
 local State = require "src.states.state"
 
 local KeysMenuState = class("OptioneMenuState", State)
-function KeysMenuState:initialize()
+function KeysMenuState:initialize(background)
     State.initialize(self,
         TimerSystem:new(),
         UpdateSystem:new(),
@@ -22,6 +22,15 @@ function KeysMenuState:initialize()
         DrawSystem:new(),
         ScreenScalerFinishSystem:new()
     )
+
+    if background then
+        self.world:addEntity({
+            draw = function()
+                love.graphics.setColor(1, 1, 1, 0.3)
+                love.graphics.draw(background)
+            end
+        })
+    end
 
     self.menu = Menu:new({
         BindKeyItem:new("Left", PlayerInput.config.controls.left, PlayerInput.config.joystick),

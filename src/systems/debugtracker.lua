@@ -5,7 +5,7 @@ local config = require "src.config"
 local Tracker = require "src.debug.tracker"
 
 local DebugTrackerSystem = tiny.system(class("DebugTrackerSystem"))
-DebugTrackerSystem.isDrawSystem = true
+DebugTrackerSystem.isPostDrawSystem = true
 
 function DebugTrackerSystem:update()
     if not config.debug.showTracker then return end

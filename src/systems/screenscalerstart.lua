@@ -4,7 +4,7 @@ local tiny = require "lib.tiny"
 local ScreenScaler = require "src.screenscaler"
 
 local ScreenScalerStart = tiny.system(class("ScreenScalerStartSystem"))
-ScreenScalerStart.isDrawSystem = true
+ScreenScalerStart.isPreDrawSystem = true
 
 function ScreenScalerStart:update()
     ScreenScaler:start()

@@ -4,7 +4,7 @@ local tiny = require "lib.tiny"
 local ScreenScaler = require "src.screenscaler"
 
 local ScreenScalerFinish = tiny.system(class("ScreenScalerFinishSystem"))
-ScreenScalerFinish.isDrawSystem = true
+ScreenScalerFinish.isPostDrawSystem = true
 
 function ScreenScalerFinish:update()
     ScreenScaler:finish()

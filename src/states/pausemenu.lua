@@ -13,13 +13,22 @@ local UpdateSystem             = require "src.systems.update"
 local PlayerInput = require "src.input.player"
 
 local PauseMenuState = class("PauseMenuState", State)
-function PauseMenuState:initialize()
+function PauseMenuState:initialize(background)
     State.initialize(self,
         UpdateSystem:new(),
         ScreenScalerStartSystem:new(),
         DrawSystem:new(),
         ScreenScalerFinishSystem:new()
     )
+
+    if background then
+        self.world:addEntity({
+            draw = function()
+                love.graphics.setColor(1, 1, 1, 0.3)
+                love.graphics.draw(background)
+            end
+        })
+    end
 
     self.menu = Menu:new({
         {
@@ -33,7 +42,7 @@ function PauseMenuState:initialize()
             title = "Options",
             caption = "Change resolution, volume, or controls",
             confirm = function()
-                gamestate.push(self.factory.create("OptionsMenu"))
+                gamestate.push(self.factory.create("OptionsMenu", background))
             end
         },
         {
