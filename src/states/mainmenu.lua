@@ -58,7 +58,7 @@ function MainMenuState:initialize()
         }
     },
     {
-        y = 140
+        y = 240
     })
 
     self.world:addEntity(self.menu)

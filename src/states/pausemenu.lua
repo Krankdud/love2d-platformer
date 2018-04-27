@@ -54,7 +54,7 @@ function PauseMenuState:initialize()
         }
     },
     {
-        y = 100
+        y = 140
     })
 
     self.world:addEntity(self.menu)

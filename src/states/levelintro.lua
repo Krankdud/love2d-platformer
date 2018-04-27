@@ -13,6 +13,8 @@ local ScreenScalerStartSystem  = require "src.systems.screenscalerstart"
 local ScreenScalerFinishSystem = require "src.systems.screenscalerfinish"
 local TimerSystem              = require "src.systems.timer"
 
+local TEXT_Y = 160
+
 local LevelIntroState = class("LevelIntroState", State)
 --- Initializes the level intro state.
 -- @param game Game object to obtain the current level from.
@@ -37,8 +39,8 @@ function LevelIntroState:initialize(game)
         draw = function()
             local font = assets.fonts.monogram(16)
             love.graphics.setFont(font)
-            love.graphics.printf(levelNum, 0, 96, screenScaler.width, "center")
-            love.graphics.printf(map.properties.title, 0, 96 + font:getHeight(), screenScaler.width, "center")
+            love.graphics.printf(levelNum, 0, TEXT_Y, screenScaler.width, "center")
+            love.graphics.printf(map.properties.title, 0, TEXT_Y + font:getHeight(), screenScaler.width, "center")
         end
     })
 end

@@ -55,7 +55,7 @@ function KeysMenuState:initialize()
         }
     },
     {
-        y = 60,
+        y = 120,
 
         back = function()
             gamestate.pop()
