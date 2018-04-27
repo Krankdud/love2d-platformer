@@ -28,6 +28,7 @@ local DebugTracker = require "src.debug.tracker"
 local Fade = require "src.entities.fade"
 local Level = require "src.level"
 local PlayerInput = require "src.input.player"
+local ScreenScaler = require "src.screenscaler"
 
 local LevelState = class("LevelState", State)
 --- Initializes the state and loads a level
@@ -84,18 +85,17 @@ function LevelState:update(dt)
     State.update(self, dt)
 
     if self.canPause and PlayerInput:pressed("pause") then
-        local canvas = love.graphics.newCanvas()
+        local canvas = love.graphics.newCanvas(ScreenScaler.width, ScreenScaler.height)
         love.graphics.setCanvas(canvas)
         self:onDraw()
         love.graphics.setCanvas()
-        gamestate.push(self.factory.create("PauseMenu", canvas))
+
+        -- Create an image out of the canvas to preserve the image through window changes
+        gamestate.push(self.factory.create("PauseMenu", love.graphics.newImage(canvas:newImageData())))
     end
 
     if love.keyboard.isScancodeDown("f5") then
-        self.world:clearSystems()
-        self.world:clearEntities()
-        self.world:refresh()
-        gamestate.switch(LevelState:new())
+        gamestate.switch(self.factory.create("Level", self.game))
     end
 end
 
